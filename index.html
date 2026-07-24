@@ -1481,24 +1481,11 @@
             <span class="nav-link__chevron" aria-hidden="true">▾</span>
           </button>
           <div class="nav-dropdown" id="nav-rules">
-  <!-- nur scrollen, kein Filter -->
-  <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk">
-    <span>Regelwerk</span>
-    <span>Alle Kategorien &amp; Suche</span>
-  </button>
-
-  <!-- Filter auf Discord-Regeln -->
-  <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk" data-rules-category="discord">
-    <span>Discord-Regeln</span>
-    <span>Schnellzugriff</span>
-  </button>
-
-  <!-- Filter auf Ingame-Regelwerk -->
-  <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk" data-rules-category="strafen">
-    <span>Ingame-Regelwerk</span>
-    <span>Komplette Übersicht</span>
-  </button>
-</div>
+           <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk">
+            <span>Regelwerk</span>
+             <span>Zum Regelwerk scrollen</span>
+            </button>
+          </div>
         </div>
 
         <button class="nav-link" type="button" data-scroll-target="#fraktionen">Fraktionen</button>
@@ -1642,68 +1629,26 @@
     <!-- =========================================================
          REGELWERK
          ========================================================= -->
-    <section class="section" id="regelwerk">
-      <div class="container">
-        <div class="section-header reveal">
-          <div>
-            <div class="section-kicker">Regelwerk</div>
-            <h2 class="section-title">Klar, fair und <span>verständlich</span>.</h2>
-          </div>
-          <p class="section-subtitle">
-            Ein gut lesbares Regelwerk schützt alle Beteiligten. Kategorien, Suche
-            und Filter helfen dir, schnell das Richtige zu finden.
-          </p>
-        </div>
+   <section class="section" id="regelwerk">
+  <div class="container">
+    <div class="section-header reveal">
+      <div>
+        <div class="section-kicker">Regelwerk</div>
+        <h2 class="section-title">Klar, fair und <span>verständlich</span>.</h2>
+      </div>
+      <p class="section-subtitle">
+        Ein gut lesbares Regelwerk schützt alle Beteiligten. Hier findest du alle
+        Regeln direkt auf einen Blick – ohne Filter oder Kategorien.
+      </p>
+    </div>
 
-        <div class="rules-layout">
-          <!-- Inhaltsverzeichnis -->
-          <aside class="toc reveal" aria-label="Inhaltsverzeichnis Regelwerk">
-            <div class="toc-title">Kategorien</div>
-            <ul class="toc-list">
-              <li>
-                <button class="toc-link" type="button" data-scroll-target="#rules-discord">
-                  <span class="toc-badge">01</span>
-                  <span>Discord-Regeln</span>
-                </button>
-              </li>
-              <li>
-                <button class="toc-link" type="button" data-scroll-target="#rules-strafen">
-                  <span class="toc-badge">02</span>
-                  <span>Ingame-Regelwerk</span>
-                </button>
-              </li>
-            </ul>
-          </aside>
+    <div class="reveal" aria-label="Regelwerk">
 
-          <!-- Regeln -->
-          <div class="reveal" aria-label="Regelwerk mit Suche">
-            <div class="rules-controls">
-              <div class="rules-search-wrap">
-                <span class="rules-search-icon" aria-hidden="true"></span>
-                <label class="sr-only" for="rulesSearch">Regeln durchsuchen</label>
-                <input
-                  id="rulesSearch"
-                  class="rules-search-input"
-                  type="search"
-                  placeholder="Regel suchen – z.B. 'VDM', 'Metagaming', 'Fahrzeug'"
-                  aria-label="Regelwerk durchsuchen"
-                />
-              </div>
-
-              <label for="rulesCategory" class="sr-only">Kategorie filtern</label>
-              <select id="rulesCategory" class="rules-filter-select">
-  <option value="alle">Alle Kategorien</option>
-  <option value="discord">Discord-Regeln</option>
-  <option value="strafen">Ingame-Regelwerk</option>
-</select>
-
-              <span class="rules-result-label" id="rulesResultLabel">Alle Regeln sichtbar</span>
-            </div>
-
-            <!-- Discord-Regeln -->
+      <!-- Discord-Regeln -->
 <div id="rules-discord" data-rule-category="discord">
   <h3 class="rule-category-title">Discord-Regeln</h3>
   <ul class="rule-list">
+
 
     <!-- DC‑01 – Über diesen Discord -->
     <li class="rule-item" data-search-text="discord server lacrp blitzal3x info">
@@ -1720,6 +1665,7 @@
         erkennst du dieses Regelwerk an.
       </div>
     </li>
+
 
     <!-- DC‑02 – Allgemeine Grundregeln -->
     <li class="rule-item" data-search-text="allgemeine grundregeln respekt beleidigung rassismus jugendschutz sprache tos">
@@ -1749,6 +1695,7 @@
       </div>
     </li>
 
+
     <!-- DC‑03 – Verhalten im Server -->
     <li class="rule-item" data-search-text="verhalten respekt umgangston spam ping everyone support">
       <button class="rule-toggle" type="button">
@@ -1773,6 +1720,7 @@
         </ul>
       </div>
     </li>
+
 
     <!-- DC‑04 – Voice-Chat & Talk -->
     <li class="rule-item" data-search-text="voice talk mikro soundboard stream aufnahme">
@@ -1799,6 +1747,7 @@
       </div>
     </li>
 
+
     <!-- DC‑05 – Datenschutz & Daten -->
     <li class="rule-item" data-search-text="datenschutz daten doxxing privacy logging stream clips">
       <button class="rule-toggle" type="button">
@@ -1814,6 +1763,7 @@
           <li>Leaks / Doxxing führen zu einem <strong>sofortigen Bann</strong>.</li>
         </ul>
 
+
         <p style="margin:0 0 0.4rem;"><strong>5.2 Aufzeichnungen &amp; Clips</strong></p>
         <ul style="padding-left:1.3rem; margin:0 0 0.5rem;">
           <li>Streams auf diesem Server (z. B. in Stage‑/Voice‑Kanälen) können aufgezeichnet
@@ -1822,6 +1772,7 @@
               Stream/Clip auftauchen kann. Wenn du das nicht möchtest, nutze z. B. den
               Sprachkanal <strong>„Musik &amp; Chill“</strong>.</li>
         </ul>
+
 
         <p style="margin:0 0 0.4rem;"><strong>5.3 Logging</strong></p>
         <ul style="padding-left:1.3rem; margin:0;">
@@ -1833,8 +1784,10 @@
       </div>
     </li>
 
+
   </ul>
 </div>
+
 
             <!-- Strafen -->
             <div id="rules-strafen" data-rule-category="strafen">
@@ -1864,10 +1817,12 @@
                 Regelwerk an.
               </p>
 
+
               <!-- 1. Grundprinzipien & Geltungsbereich -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 1. Grundprinzipien &amp; Geltungsbereich
               </h4>
+
 
               <p class="card-text">
                 <strong>1.1 Grundgedanke von Los Angeles City Roleplay</strong><br>
@@ -1885,6 +1840,7 @@
                 <li>Transparenz – Regeln werden klar kommuniziert und fair durchgesetzt.</li>
               </ul>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>1.2 Geltungsbereich</strong><br>
                 Dieses Regelwerk gilt für:
@@ -1901,6 +1857,7 @@
                 auf LACRP führen, wenn ein Zusammenhang zur Community besteht.
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>1.3 Änderungen des Regelwerks</strong>
               </p>
@@ -1911,10 +1868,12 @@
                 <li>Mit der weiteren Nutzung des Servers nach einer Änderung erkennst du das angepasste Regelwerk an.</li>
               </ul>
 
+
               <!-- 2. Allgemeines Verhalten & Community-Regeln -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 2. Allgemeines Verhalten &amp; Community‑Regeln
               </h4>
+
 
               <p class="card-text">
                 <strong>2.1 Respektvoller Umgang</strong><br>
@@ -1927,6 +1886,7 @@
                     oder Gruppen werden nicht toleriert.</li>
               </ul>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>2.2 Sprache &amp; Ausdrucksweise</strong><br>
                 Auf allen Kanälen ist deutsche Sprache erwünscht. Akzente und Dialekte sind zulässig,
@@ -1938,6 +1898,7 @@
                     auch „nur als Spaß“.</li>
               </ul>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>2.3 Werbung &amp; externe Inhalte</strong>
               </p>
@@ -1947,6 +1908,7 @@
                 <li>Links zu problematischen Inhalten (Gewaltverherrlichung, Pornografie,
                     extremistische Inhalte usw.) sind verboten.</li>
               </ul>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>2.4 Umgang mit Teammitgliedern</strong>
@@ -1958,10 +1920,12 @@
                     nutze die vorgesehenen Support‑ und Beschwerdewege.</li>
               </ul>
 
+
               <!-- 3. Technische Regeln & Accounts -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 3. Technische Regeln &amp; Accounts
               </h4>
+
 
               <p class="card-text">
                 <strong>3.1 Mindestanforderungen</strong><br>
@@ -1975,6 +1939,7 @@
                 <li>ein reifes Auftreten</li>
               </ul>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>3.2 Accountregeln</strong>
               </p>
@@ -1984,11 +1949,13 @@
                 <li>Account‑Sharing ist untersagt – du bist für deinen Account verantwortlich.</li>
               </ul>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>3.3 Nicknames &amp; Avatare</strong><br>
                 Nutzernamen und Avatare dürfen keine beleidigenden, extremistischen, pornografischen oder
                 sonstig unangemessenen Inhalte enthalten.
               </p>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>3.4 Technische Hilfsmittel &amp; Mods</strong>
@@ -2001,6 +1968,7 @@
                 <li>Die Projektleitung kann bestimmte Mods jederzeit verbieten.</li>
               </ul>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>3.5 Bugs, Exploits &amp; Duping</strong><br>
                 Das Ausnutzen von Bugs, Dupes oder Exploits ist strengstens untersagt.
@@ -2010,10 +1978,12 @@
                 <li>Gefundene Bugs sind unverzüglich dem Team zu melden (Support‑Ticket, Bug‑Report‑Channel).</li>
               </ul>
 
+
               <!-- 4. Roleplay-Grundlagen -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 4. Roleplay‑Grundlagen
               </h4>
+
 
               <p class="card-text">
                 <strong>4.1 Was ist Roleplay?</strong><br>
@@ -2026,6 +1996,7 @@
                 <li>Realistische Entscheidungen und glaubwürdiges Verhalten stehen im Vordergrund.</li>
               </ul>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>4.2 In‑Character (IC) vs. Out‑of‑Character (OOC)</strong><br>
                 In‑Character (IC): Alles, was dein Charakter sagt, denkt oder tut.<br>
@@ -2035,6 +2006,7 @@
               <p class="card-text">
                 Grundsatz: IC‑Konflikte werden IC gelöst, OOC‑Konflikte OOC (Support, Tickets, Gespräch mit dem Team).
               </p>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>4.3 Pflicht zum Roleplay</strong><br>
@@ -2047,10 +2019,12 @@
                     in ernsten Situationen.</li>
               </ul>
 
+
               <!-- 5. Verbotene Handlungen im Roleplay -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 5. Verbotene Handlungen im Roleplay
               </h4>
+
 
               <p class="card-text">
                 <strong>5.1 Metagaming</strong><br>
@@ -2063,16 +2037,19 @@
                 <li>Das Erkennen von Stimmen aus OOC‑Kontext (TS/Discord) darf nicht zur IC‑Identifikation dienen.</li>
               </ul>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>5.2 Powergaming</strong><br>
                 Powergaming ist das Erzwingen von Situationen, in denen dein Gegenüber keine
                 realistische Chance hat zu reagieren oder zu agieren, und ist verboten.
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>5.3 Random Deathmatch (RDM) &amp; Vehicle Deathmatch (VDM)</strong><br>
                 RDM und VDM – also grundloses Töten oder Überfahren ohne RP‑Hintergrund – sind strengstens untersagt.
               </p>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>5.4 Fail‑RP</strong><br>
@@ -2080,16 +2057,19 @@
                 (z. B. Ignorieren schwerer Verletzungen).
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>5.5 Combat‑Logging &amp; Combat‑Storing</strong><br>
                 Das Verlassen des Servers oder das Wegsichern von Equipment, um RP‑Konsequenzen zu umgehen,
                 ist verboten und wird hart sanktioniert.
               </p>
 
+
               <!-- 6. New-Life-Regel & Todesfälle -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 6. New‑Life‑Regel &amp; Todesfälle
               </h4>
+
 
               <p class="card-text">
                 <strong>6.1 New‑Life‑Regel (NLR)</strong><br>
@@ -2097,11 +2077,13 @@
                 (Täter, exakter Ort, Details) und kehrt nicht sofort an den Tatort zurück.
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>6.2 Ausnahmen &amp; Sonderfälle</strong><br>
                 Bei durch das Team veranlassten Toden oder geplanten Charaktertoden können
                 gesonderte Regeln gelten; dies ist vorab mit dem Team abzusprechen.
               </p>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>6.3 Bewusstlosigkeit &amp; schwere Verletzungen</strong><br>
@@ -2109,10 +2091,12 @@
                 können im Zweifel die Schwere interpretieren.
               </p>
 
+
               <!-- 7. Kommunikation, Voice & Text -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 7. Kommunikation, Voice &amp; Text
               </h4>
+
 
               <p class="card-text">
                 <strong>7.1 Voice‑Chat</strong><br>
@@ -2120,11 +2104,13 @@
                 Dauer‑Nebengeräusche sind zu vermeiden.
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>7.2 OOC‑Kommunikation im Spiel</strong><br>
                 OOC‑Kommunikation im Ingame‑Voice ist grundsätzlich verboten.
                 Technische Probleme werden IC umschrieben, längere Klärungen erfolgen im Support.
               </p>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>7.3 Funk, Handy &amp; externe Tools</strong><br>
@@ -2132,22 +2118,26 @@
                 dürfen RP‑Mechaniken nicht aushebeln.
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>7.4 Umgangston</strong><br>
                 Auch in hitzigen Situationen ist ein Mindestmaß an Respekt zu wahren – exzessives
                 Anschreien oder Real‑Life‑Beleidigungen sind zu unterlassen.
               </p>
 
+
               <!-- 8. Kriminalität & illegale Aktivitäten -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 8. Kriminalität &amp; illegale Aktivitäten
               </h4>
+
 
               <p class="card-text">
                 Illegales RP ist ausdrücklich erwünscht, solange es vorbereitet ist, einen
                 nachvollziehbaren RP‑Hintergrund hat und anderen Raum für RP lässt.
                 Reines „Grinden“ oder Trolling ist unerwünscht.
               </p>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>8.2 Überfälle &amp; Entführungen</strong><br>
@@ -2157,11 +2147,13 @@
                 oder Tragen von Dienst‑ bzw. Staatsuniformen (z. B. Polizei, Rettungsdienst, FD).
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>8.3 Banküberfälle &amp; Großkriminalität</strong><br>
                 Für große Raubzüge gelten Sonderregeln (im Discord einsehbar). Staatsfraktionen müssen
                 reagieren können; Verhandlungen und mehr als nur Schießereien sind Pflicht.
               </p>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>8.4 Folter, Gewalt, sexuelle Inhalte</strong><br>
@@ -2169,16 +2161,19 @@
                 sind verboten. Sexuelle Inhalte nur dezent und mit Zustimmung aller Beteiligten.
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>8.5 Kriminelle Gruppierungen</strong><br>
                 Benötigen Bewerbung &amp; Freigabe durch die Verwaltung. Reines „Abfarmen“ schwächerer
                 Spieler:innen ohne RP‑Mehrwert ist untersagt.
               </p>
 
+
               <!-- 9. Staatsfraktionen -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 9. Staatsfraktionen (Polizei, Rettungsdienst, Fire Department, AMR)
               </h4>
+
 
               <p class="card-text">
                 Staatsfraktionen tragen besondere Verantwortung für RP‑Fluss, Sicherheit und
@@ -2186,11 +2181,13 @@
                 bleiben in Konflikten professionell.
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>9.2 Polizei</strong><br>
                 Kein Powergaming, keine übermäßige Gewaltanwendung, schwere Eingriffe
                 (Razzien, Durchsuchungen) müssen gut begründet sein.
               </p>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>9.3 Rettungsdienst &amp; 9.4 Fire Department</strong><br>
@@ -2199,11 +2196,13 @@
                 niemals rein wirtschaftlich motiviert.
               </p>
 
+
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>9.5 AMR</strong><br>
                 Ärzt:innen und Pflegepersonal handeln neutral, können bei Gefahr für
                 Leib und Leben Patienten ablehnen oder die Polizei hinzuziehen.
               </p>
+
 
               <p class="card-text" style="margin-top:0.6rem;">
                 <strong>9.6 Fraktionsinterne Regeln</strong><br>
@@ -2211,20 +2210,24 @@
                 fraktionsinterne und serverweite Konsequenzen haben.
               </p>
 
+
               <!-- 10. Wirtschaft -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 10. Wirtschaft
               </h4>
+
 
               <p class="card-text">
                 Preise, Löhne und Wirtschaftssystem werden vom Serverteam festgelegt.
                 Wirtschaftliche Exploits sind zu melden und werden zurückgesetzt.
               </p>
 
+
               <!-- 11. Fahrzeuge, Verkehr & Fahrverhalten -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 11. Fahrzeuge, Verkehr &amp; Fahrverhalten
               </h4>
+
 
               <p class="card-text">
                 Realistisches Fahrverhalten ist Pflicht. Dauerhafte Straßenrennen,
@@ -2232,10 +2235,12 @@
                 ohne starken RP‑Grund sind untersagt.
               </p>
 
+
               <!-- 12. Waffen, Kämpfe & Eskalation -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 12. Waffen, Kämpfe &amp; Eskalation
               </h4>
+
 
               <p class="card-text">
                 Waffen sind das letzte Mittel. Vor dem Einsatz steht – wo möglich –
@@ -2243,10 +2248,12 @@
                 sind unerwünscht.
               </p>
 
+
               <!-- 13. Copbaiting, Trolling & Griefing -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 13. Copbaiting, Trolling &amp; Griefing
               </h4>
+
 
               <p class="card-text">
                 Copbaiting (bewusstes Provozieren der Polizei), Trolling und Griefing
@@ -2254,10 +2261,12 @@
                 zu deutlichen Sanktionen.
               </p>
 
+
               <!-- 14. Support, Tickets & Beschwerden -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 14. Support, Tickets &amp; Beschwerden
               </h4>
+
 
               <p class="card-text">
                 Nutze die vorgesehenen Supportwege respektvoll und sachlich. Beweise
@@ -2265,10 +2274,12 @@
                 grundsätzlich zu akzeptieren; Einsprüche laufen über die offiziellen Kanäle.
               </p>
 
+
               <!-- 15. Strafen & Sanktionen -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 15. Strafen &amp; Sanktionen
               </h4>
+
 
               <p class="card-text">
                 Strafen dienen dem Schutz der Community und der RP‑Qualität. Sie reichen
@@ -2276,10 +2287,12 @@
                 schweren Verstößen (Rassismus, Cheats, massives Fail‑RP usw.).
               </p>
 
+
               <!-- 16. Charaktere, Identitäten & Namensgebung -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 16. Charaktere, Identitäten &amp; Namensgebung
               </h4>
+
 
               <p class="card-text">
                 Charaktere tragen realistische Namen (Vor‑ und Nachname, keine „xXKillerXx“),
@@ -2287,10 +2300,12 @@
                 gegenseitig unterstützen oder vernetzen.
               </p>
 
+
               <!-- 17. Streaming & Aufnahmen -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 17. Streaming &amp; Aufnahmen
               </h4>
+
 
               <p class="card-text">
                 Streaming auf LACRP erfordert eine Streaminglizenz und die Einhaltung
@@ -2298,10 +2313,12 @@
                 kein gezieltes Bloßstellen von Spieler:innen oder Team.
               </p>
 
+
               <!-- 18. Besondere serverinterne Regeln & Events -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 18. Besondere serverinterne Regeln &amp; Events
               </h4>
+
 
               <p class="card-text">
                 Für Events, Lore‑Arcs und Testphasen können zusätzliche oder abweichende
@@ -2310,10 +2327,12 @@
                 aber nicht widersprochen werden darf.
               </p>
 
+
               <!-- 19. Haftungsausschluss & Schlussbestimmungen -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 19. Haftungsausschluss &amp; Schlussbestimmungen
               </h4>
+
 
               <p class="card-text">
                 Die Betreiber von Los Angeles City Roleplay übernehmen keine Haftung für Schäden,
@@ -2326,10 +2345,12 @@
                 bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.
               </p>
 
+
               <!-- 20. Ergänzende Hinweise & Empfehlungen -->
               <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
                 20. Ergänzende Hinweise &amp; Empfehlungen
               </h4>
+
 
               <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
                 <li>Sprich Probleme früh an – Support und Gespräche helfen mehr als Frust.</li>
@@ -2339,6 +2360,7 @@
                 <li>Halte Kontakt zum Team – Feedback hilft, LACRP besser zu machen.</li>
               </ul>
 
+
               <p class="card-text" style="margin-top:1rem;">
                 <strong>Schlusswort:</strong><br>
                 Los Angeles City Roleplay lebt von seinen Spieler:innen. Dieses Regelwerk soll keinen Spaß
@@ -2347,10 +2369,10 @@
                 Habt Spaß, bleibt fair – und willkommen in Los Angeles City Roleplay!
               </p>
             </article>
-          </div>
-        </div>
-      </div>
-    </section>
+            </div>
+    </div>
+  </div>
+</section>
 
     <!-- =========================================================
          FRAKTIONEN
