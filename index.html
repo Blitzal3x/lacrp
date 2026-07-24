@@ -1481,19 +1481,24 @@
             <span class="nav-link__chevron" aria-hidden="true">▾</span>
           </button>
           <div class="nav-dropdown" id="nav-rules">
-            <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk">
-              <span>Regelwerk</span>
-              <span>Alle Kategorien &amp; Suche</span>
-            </button>
-            <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk" data-rules-category="allgemein">
-              <span>Allgemeine Regeln</span>
-              <span>Schnellzugriff</span>
-            </button>
-            <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk" data-rules-category="roleplay">
-              <span>Roleplay-Regeln</span>
-              <span>Immersion &amp; Verhalten</span>
-            </button>
-          </div>
+  <!-- nur scrollen, kein Filter -->
+  <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk">
+    <span>Regelwerk</span>
+    <span>Alle Kategorien &amp; Suche</span>
+  </button>
+
+  <!-- Filter auf Discord-Regeln -->
+  <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk" data-rules-category="discord">
+    <span>Discord-Regeln</span>
+    <span>Schnellzugriff</span>
+  </button>
+
+  <!-- Filter auf Ingame-Regelwerk -->
+  <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk" data-rules-category="strafen">
+    <span>Ingame-Regelwerk</span>
+    <span>Komplette Übersicht</span>
+  </button>
+</div>
         </div>
 
         <button class="nav-link" type="button" data-scroll-target="#fraktionen">Fraktionen</button>
@@ -1566,7 +1571,7 @@
         Kein 0815 Server
       </div>
       <div class="hero-actions">
-        Realer als alle andere Servers
+        Realer als alle andere Server
       </div>
     </div>
 
@@ -2391,7 +2396,7 @@
               </div>
             </div>
             <div class="faction-body">
-              <h3 class="card-title">America Medical Response</h3>
+              <h3 class="card-title">American Medical Response</h3>
               <p>
                 Ohne medizinische Versorgung läuft nichts. Von Rettungsdienst bis
                 Chirurgie – du entscheidest über Leben, Tod und spannende Notfälle.
@@ -2413,7 +2418,7 @@
             <div class="faction-body">
               <h3 class="card-title">Los Angeles Fire Department</h3>
               <p>
-              Dienen mit Mut, Integrität und Stol. Komm zum LAFD und Lösche die Stadt!
+              Dienen mit Mut, Integrität und Stolz. Komm zum LAFD und Lösche die Stadt!
               </p>
               <ul class="faction-meta-list">
                 <li><strong>Aufgaben:</strong> Brandbekämpfungen, Technische Hilfe, First Responder, Menschenretten.</li>
