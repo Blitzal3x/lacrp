@@ -1031,16 +1031,17 @@
     }
 
     .rule-body {
-      display: none;
-      padding: 0.1rem 0.8rem 0.7rem;
-      font-size: 0.86rem;
-      color: var(--muted);
-      border-top: 1px solid rgba(31, 41, 55, 1);
-    }
+  display: block; /* Immer sichtbar */
+  padding: 0.1rem 0.8rem 0.7rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+  border-top: 1px solid rgba(31, 41, 55, 1);
+}
 
-    .rule-item--open .rule-body {
-      display: block;
-    }
+/* Diese Regel kannst du komplett löschen oder stehen lassen, sie hat dann keinen Effekt mehr */
+/* .rule-item--open .rule-body {
+  display: block;
+} */
 
     /* =============================================================
        TEAM
@@ -1577,16 +1578,15 @@
          ========================================================= -->
     <section class="section" id="ueber">
       <div class="container">
-        <div class="section-header reveal">
-          <div>
-            <div class="section-kicker">Über den Server</div>
-            <h2 class="section-title">Was LACRP aus<span>macht</span>.</h2>
-          </div>
-          <p class="section-subtitle">
-            Lore, Spielart und Features greifen ineinander – damit jede Session sich
-            wie eine logisch fortlaufende Geschichte anfühlt.
-          </p>
-        </div>
+        <div class="section-header">
+  <div>
+    <div class="section-kicker">Regelwerk</div>
+    <h2 class="section-title">Klar, fair und <span>verständlich</span>.</h2>
+  </div>
+  <p class="section-subtitle">
+    Ein gut lesbares Regelwerk schützt alle Beteiligten. …
+  </p>
+</div>
 
         <div class="about-grid">
           <div class="reveal">
@@ -1642,7 +1642,7 @@
       </p>
     </div>
 
-    <div class="reveal" aria-label="Regelwerk">
+    <div aria-label="Regelwerk">
 
       <!-- Discord-Regeln -->
 <div id="rules-discord" data-rule-category="discord">
