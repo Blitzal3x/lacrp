@@ -68,7 +68,7 @@
     .status { display: inline-flex; align-items: center; gap: 7px; color: var(--lime); letter-spacing: .06em; }
     .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 12px rgb(214 243 121 / 65%); }
     .panel-monogram { height: 185px; display: grid; place-items: center; margin: 20px 0 16px; border: 1px solid rgb(118 200 239 / 22%); background: repeating-linear-gradient(135deg, transparent 0 17px, rgb(118 200 239 / 3%) 17px 18px); color: var(--blue); font-weight: 900; letter-spacing: -.12em; font-size: 84px; position: relative; overflow: hidden; }
-    .panel-monogram img { width: min(82%, 300px); height: 86%; object-fit: contain; position: relative; z-index: 1; }
+    .panel-monogram img { width: min(82%, 300px); height: 86%; object-fit: contain; position: relative; z-index: 1; transform: translateY(-10px); }
     .panel-monogram::before, .panel-monogram::after { content: ""; position: absolute; width: 82px; height: 1px; background: var(--lime); transform: rotate(-45deg); opacity: .8; }
     .panel-monogram::before { top: 42px; left: 20px; }
     .panel-monogram::after { bottom: 42px; right: 20px; }
