@@ -1,3071 +1,453 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="de">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>LSCRP – Dein Roleplay-Server</title>
-  <meta name="description" content="LSCRP ist ein moderner Roleplay-Server mit eigener Story, Fraktionen, fairem Regelwerk und engagiertem Team.">
-  <meta name="keywords" content="Roleplay, RP-Server, Gaming Community, Discord, Whitelist, Regelwerk">
-
-  <!-- Hinweis: In dieser Umgebung wird alles in einer Datei gebündelt.
-       Für ein echtes Projekt kannst du den Code einfach in
-       /index.html, /css/style.css und /js/script.js aufteilen. -->
-
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#0b1018">
+  <meta name="description" content="Los Santos City Roleplay – Serious Roleplay auf FiveM. Entdecke die Community und lies das offizielle Regelwerk, Stand 28.09.2026.">
+  <title>LSCRP — Los Santos City Roleplay</title>
   <style>
-    /* =============================================================
-       DESIGN-TOKENS & BASISLAYOUT
-       ============================================================= */
     :root {
-      --bg-main: #050814;
-      --bg-elevated: #0b1020;
-      --bg-soft: #111827;
-      --accent: #60a5fa;          /* dezentes Blau */
-      --accent-soft: #4b8fe0;
-      --accent-alt: #a855f7;      /* violetter Sekundärakzent */
-      --text: #e5e7eb;
-      --muted: #9ca3af;
-      --border: #1f2933;
-      --danger: #f97373;
-      --shadow-soft: 0 18px 40px rgba(0, 0, 0, 0.6);
-      --radius-lg: 18px;
-      --radius-md: 14px;
-      --radius-sm: 10px;
-      --radius-pill: 999px;
-      --nav-height: 72px;
-      --max-width: 1180px;
-      --transition-fast: 160ms ease-out;
-      --transition-med: 240ms ease;
+      color-scheme: dark;
+      --bg: #0b1018;
+      --surface: #111923;
+      --surface-2: #151f2b;
+      --ink: #eef3f7;
+      --muted: #a5b2bf;
+      --line: #283746;
+      --blue: #76c8ef;
+      --blue-deep: #173d52;
+      --lime: #d6f379;
+      --orange: #ffb66d;
+      --max: 1160px;
+      --nav-h: 70px;
+      --radius: 18px;
+      --shadow: 0 20px 60px rgb(0 0 0 / 28%);
+      font-family: Inter, "Segoe UI", system-ui, sans-serif;
+    }
+    *, *::before, *::after { box-sizing: border-box; }
+    html { scroll-behavior: smooth; scroll-padding-top: calc(var(--nav-h) + 18px); }
+    body { margin: 0; color: var(--ink); background: var(--bg); line-height: 1.65; -webkit-font-smoothing: antialiased; }
+    body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none; opacity: .3; background-image: linear-gradient(rgb(118 200 239 / 4%) 1px, transparent 1px), linear-gradient(90deg, rgb(118 200 239 / 4%) 1px, transparent 1px); background-size: 48px 48px; mask-image: linear-gradient(to bottom, black, transparent 85%); }
+    a { color: inherit; text-decoration: none; }
+    button, input { font: inherit; }
+    button, a { -webkit-tap-highlight-color: transparent; }
+    button:focus-visible, a:focus-visible, input:focus-visible, summary:focus-visible { outline: 3px solid var(--lime); outline-offset: 3px; }
+    .wrap { width: min(var(--max), calc(100% - 48px)); margin-inline: auto; }
+    .skip-link { position: absolute; left: 12px; top: -60px; z-index: 99; background: var(--lime); color: #111; padding: 10px 14px; border-radius: 8px; }
+    .skip-link:focus { top: 12px; }
+    .topbar { position: sticky; top: 0; z-index: 50; background: rgb(11 16 24 / 90%); border-bottom: 1px solid rgb(118 200 239 / 13%); backdrop-filter: blur(16px); }
+    .nav { min-height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
+    .brand { display: inline-flex; align-items: center; gap: 12px; min-width: 0; }
+    .brand-mark { width: 38px; height: 38px; flex: 0 0 38px; display: grid; place-items: center; border: 1px solid var(--blue); color: var(--lime); font-size: 12px; font-weight: 800; letter-spacing: -.07em; transform: rotate(-5deg); background: linear-gradient(145deg, #18384a, #111923 65%); box-shadow: 5px 5px 0 rgb(118 200 239 / 15%); }
+    .brand-name { font-size: 12px; font-weight: 800; letter-spacing: .12em; line-height: 1.25; text-transform: uppercase; white-space: nowrap; }
+    .brand-sub { color: var(--muted); font-size: 11px; letter-spacing: .04em; }
+    .nav-links { display: flex; align-items: center; gap: 24px; color: var(--muted); font-size: 13px; }
+    .nav-links a { transition: color .18s ease; }
+    .nav-links a:hover { color: var(--ink); }
+    .nav-cta, .button { display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 1px solid var(--blue); border-radius: 999px; padding: 10px 16px; color: #07121a; background: var(--blue); font-size: 12px; font-weight: 800; letter-spacing: .07em; text-transform: uppercase; transition: transform .18s ease, background .18s ease; }
+    .nav-cta:hover, .button:hover { transform: translateY(-2px); background: #a2def8; }
+    .menu-toggle { display: none; width: 42px; height: 42px; background: transparent; color: var(--ink); border: 1px solid var(--line); border-radius: 50%; cursor: pointer; }
+    .mobile-links { display: none; padding: 0 24px 16px; }
+    .mobile-links a { display: block; padding: 9px 0; color: var(--muted); border-top: 1px solid var(--line); font-size: 14px; }
+    .hero { padding: 88px 0 76px; position: relative; overflow: hidden; }
+    .hero::after { content: "LS"; position: absolute; right: -20px; top: 40px; z-index: -1; color: rgb(118 200 239 / 5%); font-size: clamp(180px, 32vw, 420px); line-height: 1; font-weight: 900; letter-spacing: -.13em; }
+    .hero-grid { display: grid; grid-template-columns: minmax(0, 1.35fr) minmax(260px, .65fr); gap: 56px; align-items: center; }
+    .eyebrow { display: inline-flex; gap: 10px; align-items: center; color: var(--lime); text-transform: uppercase; font-weight: 700; font-size: 11px; letter-spacing: .19em; }
+    .eyebrow::before { content: ""; width: 26px; height: 1px; background: var(--lime); }
+    h1 { max-width: 760px; margin: 18px 0 20px; font-size: clamp(40px, 6vw, 70px); letter-spacing: -.06em; line-height: 1.02; }
+    h1 span { color: var(--blue); }
+    .hero-copy { max-width: 580px; color: var(--muted); font-size: 17px; }
+    .hero-actions { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 28px; }
+    .button-secondary { color: var(--ink); border-color: var(--line); background: transparent; }
+    .button-secondary:hover { background: var(--surface-2); }
+    .hero-note { margin-top: 19px; color: #80909d; font-size: 12px; }
+    .hero-panel { border: 1px solid var(--line); border-radius: var(--radius); background: linear-gradient(145deg, rgb(23 61 82 / 78%), rgb(17 25 35 / 96%) 58%); padding: 25px; box-shadow: var(--shadow); position: relative; }
+    .panel-top { display: flex; justify-content: space-between; align-items: center; gap: 12px; color: var(--muted); font-size: 10px; font-weight: 700; letter-spacing: .15em; text-transform: uppercase; }
+    .status { display: inline-flex; align-items: center; gap: 7px; color: var(--lime); letter-spacing: .06em; }
+    .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 12px rgb(214 243 121 / 65%); }
+    .panel-monogram { height: 185px; display: grid; place-items: center; margin: 20px 0 16px; border: 1px solid rgb(118 200 239 / 22%); background: repeating-linear-gradient(135deg, transparent 0 17px, rgb(118 200 239 / 3%) 17px 18px); color: var(--blue); font-weight: 900; letter-spacing: -.12em; font-size: 84px; position: relative; overflow: hidden; }
+    .panel-monogram::before, .panel-monogram::after { content: ""; position: absolute; width: 82px; height: 1px; background: var(--lime); transform: rotate(-45deg); opacity: .8; }
+    .panel-monogram::before { top: 42px; left: 20px; }
+    .panel-monogram::after { bottom: 42px; right: 20px; }
+    .panel-foot { display: flex; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 11px; text-transform: uppercase; letter-spacing: .12em; }
+    .panel-foot strong { color: var(--ink); }
+    .section { padding: 76px 0; border-top: 1px solid rgb(40 55 70 / 65%); }
+    .section-kicker { color: var(--blue); font-size: 10px; font-weight: 800; letter-spacing: .2em; text-transform: uppercase; }
+    .section-heading { display: flex; align-items: end; justify-content: space-between; gap: 25px; margin-bottom: 32px; }
+    h2 { margin: 6px 0 0; font-size: clamp(28px, 4vw, 42px); letter-spacing: -.045em; line-height: 1.1; }
+    .section-intro { max-width: 470px; margin: 0; color: var(--muted); font-size: 14px; }
+    .principles { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .principle { padding: 20px; border: 1px solid var(--line); border-radius: 14px; background: var(--surface); }
+    .principle-index { color: var(--lime); font: 700 11px ui-monospace, monospace; }
+    .principle h3 { margin: 10px 0 5px; font-size: 17px; }
+    .principle p { color: var(--muted); margin: 0; font-size: 13px; }
+    .rule-layout { display: grid; grid-template-columns: 220px minmax(0, 1fr); gap: 28px; align-items: start; }
+    .rule-aside { position: sticky; top: calc(var(--nav-h) + 20px); }
+    .rule-meta { padding: 17px; border-left: 2px solid var(--lime); background: var(--surface); margin-bottom: 18px; }
+    .rule-meta small { display: block; color: var(--muted); text-transform: uppercase; letter-spacing: .14em; font-size: 9px; font-weight: 800; }
+    .rule-meta strong { display: block; margin-top: 5px; font-size: 15px; }
+    .toc-title { margin: 0 0 8px; color: var(--muted); font-size: 10px; text-transform: uppercase; letter-spacing: .15em; }
+    .toc { display: grid; gap: 2px; max-height: min(53vh, 570px); overflow-y: auto; padding-right: 5px; }
+    .toc a { padding: 5px 8px; border-radius: 6px; color: var(--muted); font-size: 11px; line-height: 1.35; }
+    .toc a:hover { background: var(--surface-2); color: var(--ink); }
+    .rule-tools { display: flex; flex-wrap: wrap; gap: 9px; align-items: center; margin-bottom: 14px; }
+    .search-wrap { min-width: 200px; flex: 1; position: relative; }
+    .search-wrap input { width: 100%; border: 1px solid var(--line); border-radius: 999px; background: var(--surface); color: var(--ink); padding: 11px 14px 11px 39px; font-size: 13px; }
+    .search-wrap input::placeholder { color: #83919e; }
+    .search-icon { position: absolute; left: 14px; top: 50%; transform: translateY(-50%); color: var(--blue); font-size: 17px; pointer-events: none; }
+    .tool-button { border: 1px solid var(--line); border-radius: 999px; padding: 9px 13px; color: var(--muted); background: transparent; cursor: pointer; font-size: 11px; transition: color .16s, border-color .16s; }
+    .tool-button:hover { color: var(--ink); border-color: var(--blue); }
+    .result-count { width: 100%; color: var(--muted); font-size: 11px; padding-left: 4px; }
+    .rule-article { border: 1px solid var(--line); border-radius: 14px; background: linear-gradient(145deg, rgb(17 25 35 / 96%), rgb(14 21 30 / 98%)); margin-bottom: 9px; overflow: clip; scroll-margin-top: calc(var(--nav-h) + 18px); }
+    .rule-article[hidden] { display: none; }
+    .rule-article summary { list-style: none; cursor: pointer; display: grid; grid-template-columns: 45px 1fr 24px; gap: 12px; align-items: center; padding: 16px 18px; }
+    .rule-article summary::-webkit-details-marker { display: none; }
+    .rule-number { color: var(--blue); font: 700 12px ui-monospace, monospace; }
+    .rule-title { font-size: 14px; font-weight: 700; }
+    .rule-chevron { width: 20px; height: 20px; border: 1px solid var(--line); border-radius: 50%; display: grid; place-items: center; color: var(--lime); font-size: 13px; transition: transform .18s; }
+    details[open] .rule-chevron { transform: rotate(45deg); }
+    .rule-content { border-top: 1px solid var(--line); padding: 17px 22px 22px 75px; color: #bdc8d1; font-size: 13px; }
+    .rule-content p { margin: 0 0 12px; }
+    .rule-content p:last-child { margin-bottom: 0; }
+    .rule-content ul, .rule-content ol { margin: 6px 0 14px; padding-left: 20px; }
+    .rule-content li { margin: 4px 0; padding-left: 3px; }
+    .rule-content strong { color: var(--ink); }
+    .empty-state { display: none; padding: 26px; text-align: center; color: var(--muted); border: 1px dashed var(--line); border-radius: 14px; }
+    .empty-state.is-visible { display: block; }
+    .faction-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px; }
+    .faction { min-height: 194px; position: relative; overflow: hidden; padding: 23px; border: 1px solid var(--line); border-radius: var(--radius); background: var(--surface); }
+    .faction::after { content: attr(data-mark); position: absolute; right: 10px; bottom: -30px; color: rgb(118 200 239 / 8%); font-size: 120px; font-weight: 900; letter-spacing: -.12em; line-height: 1; }
+    .faction-tag { color: var(--lime); font: 700 10px ui-monospace, monospace; text-transform: uppercase; letter-spacing: .12em; }
+    .faction h3 { margin: 22px 0 7px; font-size: 18px; }
+    .faction p { max-width: 280px; margin: 0; color: var(--muted); font-size: 13px; position: relative; z-index: 1; }
+    .support-box { display: flex; justify-content: space-between; align-items: center; gap: 25px; padding: 28px; border: 1px solid rgb(118 200 239 / 36%); border-radius: var(--radius); background: linear-gradient(110deg, rgb(23 61 82 / 68%), rgb(17 25 35 / 97%) 68%); }
+    .support-box h3 { margin: 0 0 5px; font-size: 21px; }
+    .support-box p { margin: 0; color: var(--muted); font-size: 13px; }
+    footer { border-top: 1px solid var(--line); padding: 24px 0 32px; color: var(--muted); font-size: 11px; }
+    .footer-row { display: flex; justify-content: space-between; gap: 20px; align-items: center; }
+    .footer-title { color: var(--ink); font-weight: 700; letter-spacing: .06em; }
+    @media (max-width: 860px) {
+      :root { --nav-h: 64px; }
+      .nav-links, .nav-cta { display: none; }
+      .menu-toggle { display: inline-grid; place-items: center; }
+      .mobile-links.is-open { display: block; }
+      .hero { padding: 64px 0 58px; }
+      .hero-grid { grid-template-columns: 1fr; gap: 34px; }
+      .hero-panel { max-width: 500px; }
+      .panel-monogram { height: 140px; }
+      .rule-layout { grid-template-columns: 1fr; }
+      .rule-aside { position: static; }
+      .toc { display: flex; max-height: none; overflow-x: auto; padding-bottom: 4px; }
+      .toc a { flex: 0 0 auto; border: 1px solid var(--line); padding: 7px 10px; }
+    }
+    @media (max-width: 620px) {
+      .wrap { width: min(100% - 32px, var(--max)); }
+      .section { padding: 56px 0; }
+      .section-heading { display: block; }
+      .section-intro { margin-top: 12px; }
+      .principles, .faction-grid { grid-template-columns: 1fr; }
+      .rule-content { padding: 14px 17px 19px; }
+      .rule-article summary { grid-template-columns: 38px 1fr 22px; padding: 14px; gap: 8px; }
+      .rule-title { font-size: 13px; }
+      .support-box { display: block; padding: 22px; }
+      .support-box .button { margin-top: 16px; }
+      .footer-row { align-items: flex-start; flex-direction: column; }
+      .hero-actions .button { width: 100%; }
     }
-
-    *, *::before, *::after {
-      box-sizing: border-box;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      margin: 0;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: radial-gradient(circle at 0% -20%, #1e293b 0, #020617 40%, #020617 100%);
-      color: var(--text);
-      -webkit-font-smoothing: antialiased;
-      text-rendering: optimizeLegibility;
-    }
-
-    img {
-      max-width: 100%;
-      display: block;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    button, input, textarea, select {
-      font: inherit;
-    }
-
-    :focus-visible {
-      outline: 2px solid var(--accent);
-      outline-offset: 3px;
-    }
-
-    .container {
-      width: 100%;
-      max-width: var(--max-width);
-      margin: 0 auto;
-      padding: 0 1.5rem;
-    }
-
-    section {
-      scroll-margin-top: calc(var(--nav-height) + 20px);
-    }
-
-    .sr-only {
-      position: absolute;
-      width: 1px;
-      height: 1px;
-      padding: 0;
-      margin: -1px;
-      overflow: hidden;
-      clip: rect(0, 0, 0, 0);
-      white-space: nowrap;
-      border: 0;
-    }
-    
-
-    /* =============================================================
-       PRELOADER
-       ============================================================= */
-    .preloader {
-      position: fixed;
-      inset: 0;
-      background: radial-gradient(circle at top, #020617 0, #020617 45%, #000 100%);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      z-index: 9999;
-      color: var(--text);
-      transition: opacity 240ms ease-out, visibility 240ms ease-out;
-    }
-
-    .preloader--hidden {
-      opacity: 0;
-      visibility: hidden;
-    }
-
-    .preloader__spinner {
-      width: 54px;
-      height: 54px;
-      border-radius: 50%;
-      border: 3px solid rgba(148, 163, 184, 0.4);
-      border-top-color: var(--accent);
-      animation: spin 0.9s linear infinite;
-    }
-
-    .preloader__label {
-      font-size: 0.9rem;
-      letter-spacing: 0.15em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    @keyframes spin {
-      to {
-        transform: rotate(360deg);
-      }
-    }
-
-    /* =============================================================
-       NAVIGATION & DROPDOWNS
-       ============================================================= */
-    .site-header {
-      position: sticky;
-      top: 0;
-      z-index: 40;
-      backdrop-filter: blur(20px);
-      background: linear-gradient(to bottom, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.92));
-      border-bottom: 1px solid rgba(15, 23, 42, 1);
-    }
-
-    .site-header--scrolled {
-      box-shadow: 0 18px 45px rgba(0, 0, 0, 0.7);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98));
-    }
-
-    .navbar {
-      height: var(--nav-height);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 1rem;
-    }
-
-    .navbar__brand {
-      display: flex;
-      align-items: center;
-      gap: 0.7rem;
-    }
-
-    .brand-logo {
-      width: 32px;
-      height: 32px;
-      border-radius: 30%;
-      background: conic-gradient(from 210deg, #38bdf8, #6366f1, #22c55e, #38bdf8);
-      position: relative;
-      overflow: hidden;
-      box-shadow: 0 0 0 1px #020617, 0 16px 30px rgba(15, 23, 42, 0.9);
-    }
-
-    .brand-logo::after {
-      content: "";
-      position: absolute;
-      inset: 22%;
-      border-radius: inherit;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.3), rgba(15, 23, 42, 0.9));
-    }
-
-    .brand-title {
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      font-size: 0.85rem;
-    }
-
-    .brand-subtitle {
-      font-size: 0.78rem;
-      color: var(--muted);
-    }
-
-    .navbar__nav {
-      display: flex;
-      align-items: center;
-      gap: 1.5rem;
-      font-size: 0.9rem;
-    }
-
-    .nav-item {
-      position: relative;
-    }
-
-    .nav-link {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      color: var(--muted);
-      transition: color var(--transition-fast);
-      /* Buttons in der Top-Navigation wie Links aussehen lassen */
-      background: transparent;
-      border: 0;
-      padding: 0;
-      cursor: pointer;
-    }
-
-    .nav-link::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      bottom: -0.4rem;
-      width: 0;
-      height: 2px;
-      border-radius: 999px;
-      background: linear-gradient(90deg, #38bdf8, #6366f1);
-      transition: width var(--transition-med);
-    }
-
-    .nav-link:hover,
-    .nav-link:focus-visible {
-      color: var(--text);
-    }
-
-    .nav-link:hover::after,
-    .nav-link:focus-visible::after {
-      width: 70%;
-    }
-
-    .nav-link__chevron {
-      width: 12px;
-      height: 12px;
-      border-radius: 3px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.55rem;
-      color: var(--muted);
-    }
-
-    .nav-dropdown {
-      position: absolute;
-      inset-inline-start: 0;
-      top: calc(100% + 0.6rem);
-      min-width: 210px;
-      background: radial-gradient(circle at top, #020617, #020617 46%, #020617 100%);
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(30, 64, 175, 0.5);
-      box-shadow: var(--shadow-soft);
-      padding: 0.5rem 0.4rem;
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(6px);
-      transition: opacity var(--transition-med), transform var(--transition-med), visibility var(--transition-med);
-      z-index: 20;
-    }
-
-    .nav-item--open .nav-dropdown {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    .nav-dropdown__link {
-      display: flex;
-      flex-direction: column;
-      padding: 0.45rem 0.7rem;
-      border-radius: var(--radius-sm);
-      color: var(--muted);
-      font-size: 0.85rem;
-      transition: background var(--transition-fast), color var(--transition-fast);
-    }
-
-    .nav-dropdown__link span:first-child {
-      color: var(--text);
-      margin-bottom: 0.05rem;
-    }
-
-    .nav-dropdown__link:hover {
-      background: rgba(37, 99, 235, 0.2);
-      color: var(--text);
-    }
-
-    .navbar__actions {
-      display: flex;
-      align-items: center;
-      gap: 0.75rem;
-    }
-
-    .badge-pill {
-      padding: 0.2rem 0.7rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(56, 189, 248, 0.6);
-      background: rgba(15, 23, 42, 0.96);
-      font-size: 0.73rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .btn {
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.4rem;
-      padding: 0.55rem 1.25rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid transparent;
-      background: none;
-      color: var(--text);
-      font-size: 0.85rem;
-      font-weight: 500;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      cursor: pointer;
-      transition: background var(--transition-med), box-shadow var(--transition-med), transform var(--transition-fast), border-color var(--transition-fast), color var(--transition-fast);
-    }
-
-    .btn--primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-alt));
-      color: #020617;
-      box-shadow: 0 14px 30px rgba(37, 99, 235, 0.55);
-    }
-
-    .btn--primary:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 18px 40px rgba(37, 99, 235, 0.7);
-    }
-
-    .btn--ghost {
-      border-color: rgba(148, 163, 184, 0.5);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 1));
-      color: var(--muted);
-    }
-
-    .btn--ghost:hover {
-      border-color: rgba(148, 163, 184, 0.9);
-      color: var(--text);
-    }
-
-    .btn__dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #020617;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .btn__dot::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      background: conic-gradient(from 120deg, #38bdf8, #6366f1, #f97316, #38bdf8);
-      filter: blur(1px);
-    }
-
-    .navbar__toggle {
-      display: none;
-      width: 38px;
-      height: 38px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.98), rgba(15, 23, 42, 0.98));
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--text);
-      transition: transform var(--transition-fast), border-color var(--transition-fast);
-    }
-
-    .navbar__toggle:hover {
-      transform: translateY(-1px);
-      border-color: rgba(148, 163, 184, 1);
-    }
-
-    .navbar__toggle-line {
-      width: 18px;
-      height: 2px;
-      border-radius: 999px;
-      background: var(--text);
-      position: relative;
-    }
-
-    .navbar__toggle-line::before,
-    .navbar__toggle-line::after {
-      content: "";
-      position: absolute;
-      left: 0;
-      width: 18px;
-      height: 2px;
-      border-radius: inherit;
-      background: inherit;
-      transition: transform var(--transition-med), top var(--transition-med);
-    }
-
-    .navbar__toggle-line::before { top: -5px; }
-    .navbar__toggle-line::after  { top:  5px; }
-
-    .navbar__toggle--open .navbar__toggle-line {
-      background: transparent;
-    }
-
-    .navbar__toggle--open .navbar__toggle-line::before {
-      top: 0;
-      transform: rotate(45deg);
-    }
-
-    .navbar__toggle--open .navbar__toggle-line::after {
-      top: 0;
-      transform: rotate(-45deg);
-    }
-
-    .navbar__mobile-menu {
-      display: none;
-      overflow: hidden;
-      max-height: 0;
-      transition: max-height 220ms ease;
-    }
-
-    .navbar__mobile-inner {
-      padding: 0.4rem 1.5rem 1.1rem;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 0.98));
-      border-bottom: 1px solid rgba(15, 23, 42, 1);
-      display: grid;
-      gap: 0.6rem;
-      font-size: 0.95rem;
-    }
-
-    .navbar__mobile-group-label {
-      font-size: 0.8rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-top: 0.2rem;
-    }
-
-    /* =============================================================
-       HERO / STARTSEITE
-       ============================================================= */
-    .hero {
-      padding: 4.2rem 0 3.2rem;
-    }
-
-    .hero-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.3fr) minmax(0, 1.05fr);
-      gap: 3rem;
-      align-items: center;
-    }
-
-    .eyebrow {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.6rem;
-      padding: 0.2rem 0.7rem 0.2rem 0.3rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(56, 189, 248, 0.5);
-      background: radial-gradient(circle at top left, rgba(56, 189, 248, 0.16), rgba(15, 23, 42, 0.96));
-      font-size: 0.76rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 1.4rem;
-    }
-
-    .eyebrow-orb {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #e0f2fe, #38bdf8, #0f172a);
-      box-shadow: 0 12px 35px rgba(56, 189, 248, 0.7);
-    }
-
-    .hero-title {
-      font-size: clamp(2.3rem, 4vw, 3.1rem);
-      line-height: 1.06;
-      margin: 0 0 1.1rem;
-    }
-
-    .hero-title span {
-      background: linear-gradient(120deg, #38bdf8, #6366f1, #a855f7);
-      -webkit-background-clip: text;
-      background-clip: text;
-      color: transparent;
-    }
-
-    .hero-lead {
-      margin: 0 0 1.7rem;
-      font-size: 1rem;
-      color: var(--muted);
-      max-width: 36rem;
-    }
-
-    .hero-meta {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 1rem 1.6rem;
-      font-size: 0.9rem;
-      margin-bottom: 2.1rem;
-    }
-
-    .hero-meta-item {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.5rem;
-      color: var(--muted);
-    }
-
-    .hero-meta-tag {
-      padding: 0.15rem 0.6rem;
-      border-radius: var(--radius-pill);
-      background: rgba(34, 197, 94, 0.14);
-      border: 1px solid rgba(34, 197, 94, 0.45);
-      color: #bbf7d0;
-      font-size: 0.7rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .hero-actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-      margin-bottom: 2.1rem;
-    }
-
-    .hero-note {
-      font-size: 0.86rem;
-      color: var(--muted);
-    }
-
-    .hero-visual {
-      position: relative;
-      min-height: 260px;
-      isolation: isolate;
-    }
-
-    .hero-card {
-      border-radius: 26px;
-      padding: 1.4rem 1.4rem 1.2rem;
-      border: 1px solid rgba(31, 41, 55, 0.9);
-      background: radial-gradient(circle at top left, rgba(30, 64, 175, 0.3), rgba(15, 23, 42, 0.98));
-      box-shadow: var(--shadow-soft);
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-card-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 1.1rem;
-    }
-
-    .hero-card-title {
-      font-size: 0.9rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-    }
-
-    .hero-card-pill {
-      padding: 0.18rem 0.7rem;
-      border-radius: var(--radius-pill);
-      background: rgba(56, 189, 248, 0.18);
-      border: 1px solid rgba(56, 189, 248, 0.5);
-      font-size: 0.76rem;
-      color: #e0f2fe;
-    }
-
-    .hero-card-grid {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr;
-      gap: 1rem;
-      align-items: flex-end;
-    }
-
-    .hero-stats-label {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 0.5rem;
-    }
-
-    .hero-stat-number {
-      font-size: 2.4rem;
-      font-weight: 600;
-      letter-spacing: 0.02em;
-      margin-bottom: 0.35rem;
-    }
-
-    .hero-stat-sub {
-      font-size: 0.85rem;
-      color: var(--muted);
-      margin-bottom: 0.7rem;
-    }
-
-    .hero-ping-row {
-      display: flex;
-      gap: 0.45rem;
-      font-size: 0.8rem;
-      align-items: center;
-    }
-
-    .hero-ping-dot {
-      width: 9px;
-      height: 9px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #bbf7d0, #22c55e);
-      box-shadow: 0 0 15px rgba(34, 197, 94, 0.9);
-      animation: pulse 1.4s ease-out infinite;
-    }
-
-    @keyframes pulse {
-      0% { transform: scale(1); opacity: 1; }
-      60% { transform: scale(1.8); opacity: 0; }
-      100% { transform: scale(1); opacity: 0; }
-    }
-
-    .hero-placeholder-img {
-      position: relative;
-      border-radius: 20px;
-      border: 1px dashed rgba(148, 163, 184, 0.8);
-      padding: 1rem;
-      font-size: 0.85rem;
-      color: var(--muted);
-      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.2), rgba(15, 23, 42, 0.98));
-    }
-
-    .hero-placeholder-tag {
-      position: absolute;
-      top: 0.9rem;
-      right: 0.9rem;
-      padding: 0.18rem 0.6rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      background: rgba(15, 23, 42, 0.9);
-      font-size: 0.74rem;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-    }
-
-    .hero-orbit {
-      position: absolute;
-      inset: -20% -5%;
-      pointer-events: none;
-      opacity: 0.35;
-    }
-
-    .hero-orbit-ring {
-      position: absolute;
-      border-radius: 999px;
-      border: 1px dashed rgba(148, 163, 184, 0.35);
-    }
-
-    .hero-orbit-ring:nth-child(1) { inset: 30% 12% 35% 6%; }
-    .hero-orbit-ring:nth-child(2) { inset: 18% 4% 45% 20%; }
-
-    .hero-orbit-dot {
-      width: 8px;
-      height: 8px;
-      border-radius: 999px;
-      background: radial-gradient(circle at 30% 20%, #e0f2fe, #60a5fa);
-      position: absolute;
-      top: 24%;
-      right: 20%;
-      box-shadow: 0 12px 30px rgba(37, 99, 235, 0.9);
-      animation: orbit 16s linear infinite;
-      transform-origin: -70px 60px;
-    }
-
-    @keyframes orbit {
-      to { transform: rotate(360deg); }
-    }
-
-    /* =============================================================
-       SEKTIONEN / TYPOGRAFIE
-       ============================================================= */
-    .section {
-      padding: 3.4rem 0 3.4rem;
-    }
-
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-end;
-      gap: 1.3rem;
-      margin-bottom: 2.2rem;
-    }
-
-    .section-kicker {
-      font-size: 0.8rem;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--muted);
-      margin-bottom: 0.4rem;
-    }
-
-    .section-title {
-      font-size: 1.6rem;
-      margin: 0;
-    }
-
-    .section-title span {
-      color: #bfdbfe;
-    }
-
-    .section-subtitle {
-      margin: 0;
-      font-size: 0.95rem;
-      color: var(--muted);
-      max-width: 28rem;
-    }
-
-    /* Grids & Karten */
-    .grid-3 {
-      display: grid;
-      grid-template-columns: repeat(3, minmax(0, 1fr));
-      gap: 1.4rem;
-    }
-
-    .grid-2 {
-      display: grid;
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-      gap: 1.4rem;
-    }
-
-    .card {
-      position: relative;
-      border-radius: var(--radius-lg);
-      padding: 1.25rem 1.25rem 1.15rem;
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 0.95), rgba(15, 23, 42, 1));
-      border: 1px solid rgba(31, 41, 55, 1);
-      box-shadow: 0 18px 40px rgba(0, 0, 0, 0.55);
-      overflow: hidden;
-      transition: transform var(--transition-fast), box-shadow var(--transition-fast), border-color var(--transition-fast), background var(--transition-med);
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background: radial-gradient(circle at top, rgba(56, 189, 248, 0.1), transparent 60%);
-      opacity: 0;
-      transition: opacity var(--transition-med), transform 420ms ease-out;
-    }
-
-    .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 24px 55px rgba(0, 0, 0, 0.8);
-      border-color: rgba(59, 130, 246, 0.9);
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 1), #020617);
-    }
-
-    .card:hover::before {
-      opacity: 1;
-      transform: translateY(-6px);
-    }
-
-    .card-title {
-      font-size: 1.02rem;
-      margin: 0 0 0.4rem;
-    }
-
-    .card-text {
-      margin: 0;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.3rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.6);
-      font-size: 0.75rem;
-      color: var(--muted);
-      background: rgba(15, 23, 42, 0.98);
-    }
-
-    .chip--blue {
-      border-color: rgba(59, 130, 246, 0.8);
-      color: #bfdbfe;
-    }
-
-    .meta-row {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-top: 1rem;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .link-inline {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.35rem;
-      font-size: 0.85rem;
-      color: #bfdbfe;
-    }
-
-    .link-inline svg {
-      width: 14px;
-      height: 14px;
-    }
-
-    /* =============================================================
-       ÜBER DEN SERVER
-       ============================================================= */
-    .about-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
-      gap: 1.8rem;
-    }
-
-    .about-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 0.9rem;
-      font-size: 0.9rem;
-      color: var(--muted);
-    }
-
-    .about-highlight {
-      border-radius: var(--radius-lg);
-      padding: 1.1rem 1.2rem;
-      border: 1px solid rgba(55, 65, 81, 1);
-      background: radial-gradient(circle at top left, rgba(55, 65, 81, 0.7), rgba(15, 23, 42, 1));
-      font-size: 0.9rem;
-    }
-
-    .about-pill-row {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.5rem;
-      margin-top: 0.8rem;
-    }
-
-    /* =============================================================
-       REGELWERK
-       ============================================================= */
-    .rules-layout {
-      display: grid;
-      grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.2fr);
-      gap: 2rem;
-      align-items: flex-start;
-    }
-
-    .toc {
-      position: sticky;
-      top: calc(var(--nav-height) + 1.5rem);
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(31, 41, 55, 1);
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 1), rgba(15, 23, 42, 1));
-      padding: 1.1rem 1.15rem;
-      box-shadow: var(--shadow-soft);
-      font-size: 0.88rem;
-    }
-
-    .toc-title {
-      font-size: 0.88rem;
-      text-transform: uppercase;
-      letter-spacing: 0.18em;
-      color: var(--muted);
-      margin-bottom: 0.6rem;
-    }
-
-    .toc-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 0.3rem;
-    }
-
-    .toc-link {
-  display: inline-flex;
-  align-items: center;
-  gap: 0.35rem;
-  padding: 0.2rem 0;
-  color: var(--muted);
-  cursor: pointer;
-  transition: color var(--transition-fast);
-  /* Buttons im TOC wie Links aussehen lassen */
-  background: transparent;
-  border: 0;
-}
-
-    .toc-link:hover {
-      color: var(--text);
-    }
-
-    .toc-badge {
-      padding: 0.08rem 0.35rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      font-size: 0.7rem;
-    }
-
-    .rules-controls {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.7rem;
-      margin-bottom: 1rem;
-      align-items: center;
-    }
-
-    .rules-search-wrap {
-      position: relative;
-      flex: 1 1 220px;
-      max-width: 420px;
-    }
-
-    .rules-search-input {
-      width: 100%;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(51, 65, 85, 1);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 1));
-      padding: 0.55rem 0.75rem 0.55rem 1.9rem;
-      font-size: 0.86rem;
-      color: var(--text);
-    }
-
-    .rules-search-input::placeholder {
-      color: var(--muted);
-    }
-
-    .rules-search-icon {
-      position: absolute;
-      left: 0.6rem;
-      top: 50%;
-      transform: translateY(-50%);
-      width: 15px;
-      height: 15px;
-      border-radius: 999px;
-      border: 2px solid rgba(148, 163, 184, 0.9);
-      box-shadow: 2px 2px 0 rgba(148, 163, 184, 0.9);
-    }
-
-    .rules-filter-select {
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(51, 65, 85, 1);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 1));
-      color: var(--text);
-      padding: 0.55rem 0.9rem;
-      font-size: 0.86rem;
-    }
-
-    .rules-result-label {
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .rule-category-title {
-      font-size: 0.98rem;
-      margin: 1.2rem 0 0.4rem;
-    }
-
-    .rule-list {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 0.5rem;
-    }
-
-    .rule-item {
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(31, 41, 55, 1);
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 1), rgba(15, 23, 42, 1));
-      overflow: hidden;
-    }
-
-    .rule-toggle {
-      width: 100%;
-      border: 0;
-      display: grid;
-      grid-template-columns: auto 1fr auto;
-      align-items: center;
-      gap: 0.55rem;
-      padding: 0.6rem 0.8rem;
-      background: none;
-      color: inherit;
-      text-align: left;
-      cursor: pointer;
-    }
-
-    .rule-number {
-      font-family: monospace;
-      font-size: 0.8rem;
-      color: var(--muted);
-    }
-
-    .rule-title {
-      font-size: 0.88rem;
-    }
-
-    .rule-tag {
-      padding: 0.1rem 0.5rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      font-size: 0.7rem;
-      color: var(--muted);
-    }
-
-    .rule-body {
-  display: block; /* Immer sichtbar */
-  padding: 0.1rem 0.8rem 0.7rem;
-  font-size: 0.86rem;
-  color: var(--muted);
-  border-top: 1px solid rgba(31, 41, 55, 1);
-}
-
-/* Diese Regel kannst du komplett löschen oder stehen lassen, sie hat dann keinen Effekt mehr */
-/* .rule-item--open .rule-body {
-  display: block;
-} */
-
-    /* =============================================================
-       TEAM
-       ============================================================= */
-    .team-filters {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.6rem;
-      margin-bottom: 1.4rem;
-      font-size: 0.82rem;
-    }
-
-    .filter-pill {
-      padding: 0.28rem 0.7rem;
-      border-radius: var(--radius-pill);
-      border: 1px solid rgba(51, 65, 85, 1);
-      background: rgba(15, 23, 42, 0.98);
-      color: var(--muted);
-      cursor: pointer;
-      transition: background var(--transition-fast), color var(--transition-fast), border-color var(--transition-fast);
-    }
-
-    .filter-pill--active {
-      border-color: rgba(59, 130, 246, 0.9);
-      background: radial-gradient(circle at top, rgba(37, 99, 235, 0.4), rgba(15, 23, 42, 1));
-      color: #dbeafe;
-    }
-
-    .team-card {
-      display: grid;
-      grid-template-columns: auto 1fr;
-      gap: 0.9rem;
-      padding: 1rem;
-      align-items: center;
-    }
-
-    .team-avatar {
-      width: 56px;
-      height: 56px;
-      border-radius: 999px;
-      background: radial-gradient(circle at top left, #38bdf8, #6366f1);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: 600;
-      font-size: 1rem;
-      box-shadow: 0 14px 35px rgba(37, 99, 235, 0.7);
-    }
-
-    .team-role {
-      font-size: 0.8rem;
-      color: #bfdbfe;
-      margin-bottom: 0.1rem;
-    }
-
-    .team-name {
-      font-size: 0.96rem;
-      margin-bottom: 0.15rem;
-    }
-
-    .team-meta {
-      font-size: 0.8rem;
-      color: var(--muted);
-      margin-bottom: 0.2rem;
-    }
-
-    .team-desc {
-      font-size: 0.84rem;
-      color: var(--muted);
-      margin: 0;
-    }
-
-    /* =============================================================
-       FRAKTIONEN
-       ============================================================= */
-    .faction-card {
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      overflow: hidden;
-    }
-
-    .faction-img {
-      position: relative;
-      aspect-ratio: 16/9;
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 1));
-      border-bottom: 1px solid rgba(31, 41, 55, 1);
-    }
-
-    .faction-img-inner {
-      position: absolute;
-      inset: 1rem;
-      border-radius: 16px;
-      border: 1px dashed rgba(148, 163, 184, 0.9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 0.8rem;
-      font-size: 0.83rem;
-      color: var(--muted);
-    }
-
-    .faction-body {
-      padding: 1rem 1.1rem 1rem;
-      font-size: 0.88rem;
-      color: var(--muted);
-    }
-
-    .faction-meta-list {
-      list-style: none;
-      padding: 0;
-      margin: 0.6rem 0 0;
-      display: grid;
-      gap: 0.35rem;
-      font-size: 0.84rem;
-    }
-
-    /* =============================================================
-       FAQ
-       ============================================================= */
-    .faq-grid {
-      display: grid;
-      grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.9fr);
-      gap: 2rem;
-    }
-
-    .faq-list {
-      display: grid;
-      gap: 0.9rem;
-    }
-
-    .faq-item {
-      border-radius: var(--radius-md);
-      border: 1px solid rgba(31, 41, 55, 1);
-      background: radial-gradient(circle at top left, rgba(15, 23, 42, 1), rgba(15, 23, 42, 1));
-      padding: 0.85rem 0.9rem;
-      cursor: pointer;
-      transition: border-color var(--transition-fast), transform var(--transition-fast), background var(--transition-med);
-    }
-
-    .faq-item:hover {
-      border-color: rgba(59, 130, 246, 0.85);
-      transform: translateY(-1px);
-    }
-
-    .faq-question-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 0.8rem;
-    }
-
-   .faq-question {
-  font-size: 0.9rem;
-  color: var(--text); /* Text weiß */
-}
-
-    .faq-toggle {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.7);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.8rem;
-      color: var(--muted);
-      flex-shrink: 0;
-    }
-
-    .faq-answer {
-      margin-top: 0.55rem;
-      font-size: 0.84rem;
-      color: var(--muted);
-      display: none;
-    }
-
-    .faq-item--open .faq-answer { display: block; }
-    .faq-item--open .faq-toggle { border-color: rgba(59, 130, 246, 0.85); color: #bfdbfe; }
-
-    .faq-note {
-      font-size: 0.86rem;
-      color: var(--muted);
-      margin-bottom: 1.1rem;
-    }
-
-    /* =============================================================
-       KONTAKT & DISCORD
-       ============================================================= */
-
-    .discord-card {
-      margin-top: 1rem;
-      border-radius: var(--radius-lg);
-      border: 1px solid rgba(55, 65, 81, 1);
-      background: radial-gradient(circle at top left, rgba(79, 70, 229, 0.45), rgba(15, 23, 42, 1));
-      padding: 1rem 1.1rem;
-      display: flex;
-      flex-direction: column;
-      gap: 0.6rem;
-    }
-
-    .discord-tagline {
-      font-size: 0.85rem;
-      color: #c7d2fe;
-    }
-
-    /* =============================================================
-       FOOTER
-       ============================================================= */
-    .site-footer {
-      border-top: 1px solid rgba(15, 23, 42, 1);
-      background: radial-gradient(circle at top, #020617, #020617 40%, #000 100%);
-      padding: 2.4rem 0 2.1rem;
-      font-size: 0.84rem;
-      color: var(--muted);
-    }
-
-    .footer-grid {
-      display: grid;
-      grid-template-columns: 1.1fr repeat(3, minmax(0, 0.7fr));
-      gap: 1.8rem 1.6rem;
-      margin-bottom: 1.7rem;
-    }
-
-    .footer-heading {
-      font-size: 0.8rem;
-      letter-spacing: 0.16em;
-      text-transform: uppercase;
-      color: var(--text);
-      margin-bottom: 0.6rem;
-    }
-
-    .footer-links {
-      list-style: none;
-      padding: 0;
-      margin: 0;
-      display: grid;
-      gap: 0.4rem;
-    }
-
-    .footer-links a { color: var(--muted); }
-    .footer-links a:hover { color: var(--text); }
-
-    .footer-bottom {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: space-between;
-      gap: 0.8rem;
-      font-size: 0.8rem;
-    }
-
-    .footer-bottom-links {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 0.8rem;
-    }
-    /* Footer-Navigation: Buttons wie Links darstellen */
-.footer-links button {
-  background: transparent;
-  border: 0;
-  padding: 0;
-  text-align: left;
-  color: var(--muted);
-  font: inherit;
-  cursor: pointer;
-}
-
-.footer-links button:hover {
-  color: var(--text);
-}
-
-    /* =============================================================
-       SCROLL-TO-TOP BUTTON
-       ============================================================= */
-    .scroll-top-btn {
-      position: fixed;
-      right: 1.4rem;
-      bottom: 1.4rem;
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      border: 1px solid rgba(148, 163, 184, 0.8);
-      background: radial-gradient(circle at top, rgba(15, 23, 42, 1), rgba(15, 23, 42, 1));
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      color: var(--muted);
-      box-shadow: 0 18px 35px rgba(0, 0, 0, 0.8);
-      opacity: 0;
-      visibility: hidden;
-      transform: translateY(8px);
-      transition: opacity 200ms ease, visibility 200ms ease, transform 200ms ease;
-      z-index: 35;
-    }
-
-    .scroll-top-btn--visible {
-      opacity: 1;
-      visibility: visible;
-      transform: translateY(0);
-    }
-
-    /* =============================================================
-       SCROLL-REVEAL
-       ============================================================= */
-    .reveal {
-      opacity: 0;
-      transform: translateY(18px);
-      transition: opacity 460ms ease-out, transform 460ms ease-out;
-    }
-
-    .reveal--visible {
-      opacity: 1;
-      transform: translateY(0);
-    }
-
     @media (prefers-reduced-motion: reduce) {
-      * {
-        scroll-behavior: auto !important;
-        animation-duration: 0.01ms !important;
-        animation-iteration-count: 1 !important;
-        transition-duration: 0.01ms !important;
-      }
-    }
-
-    /* =============================================================
-       RESPONSIVE DESIGN
-       ============================================================= */
-    @media (max-width: 1040px) {
-      .hero-grid {
-        grid-template-columns: minmax(0, 1.1fr);
-      }
-
-      .hero-visual { order: -1; }
-
-      .rules-layout,
-      .about-grid,
-      .faq-grid,
-      .contact-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .toc {
-        position: static;
-      }
-    }
-
-    @media (max-width: 880px) {
-      .grid-3 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
-      .footer-grid { grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); }
-      .footer-grid > div:first-child { grid-column: 1 / -1; }
-    }
-
-    @media (max-width: 768px) {
-      .navbar__nav,
-      .navbar__actions .btn--ghost {
-        display: none;
-      }
-
-      .navbar__toggle {
-        display: inline-flex;
-      }
-
-      .navbar__mobile-menu { display: block; }
-
-      .grid-3,
-      .grid-2 {
-        grid-template-columns: minmax(0, 1fr);
-      }
-
-      .hero {
-        padding-top: 3.3rem;
-      }
-
-      .section-header {
-        flex-direction: column;
-        align-items: flex-start;
-      }
-
-      .form-grid {
-        grid-template-columns: minmax(0, 1fr);
-      }
-    }
-
-    @media (max-width: 520px) {
-      .navbar { padding-block: 0.3rem; }
-      .hero-meta { flex-direction: column; }
-      .footer-grid { grid-template-columns: minmax(0, 1fr); }
+      *, *::before, *::after { scroll-behavior: auto !important; transition-duration: .01ms !important; animation-duration: .01ms !important; animation-iteration-count: 1 !important; }
     }
   </style>
 </head>
 <body>
-  <!-- ===========================================================
-       PRELOADER
-       =========================================================== -->
-  <div class="preloader" id="preloader" role="status" aria-label="Seite wird geladen">
-    <div class="preloader__spinner" aria-hidden="true"></div>
-    <div class="preloader__label">LSCRP wird initialisiert …</div>
-  </div>
-
-  <!-- ===========================================================
-       NAVIGATION
-       =========================================================== -->
-  <header class="site-header" id="site-header">
-    <div class="container navbar" aria-label="Hauptnavigation">
-      <a href="#start" class="navbar__brand">
-  <div class="brand-logo">
-    <img src="lacrp.png" alt="Los Santos City Roleplay Logo" class="brand-logo-img">
-  </div>
-  <div>
-    <div class="brand-title">Los Santos City Roleplay</div>
-    <div class="brand-subtitle">Roleplay Community</div>
-  </div>
-</a>
-
-      <nav class="navbar__nav" aria-label="Hauptmenü">
-        <div class="nav-item">
-          <button class="nav-link" type="button" data-dropdown-toggle="nav-server">
-            Server
-            <span class="nav-link__chevron" aria-hidden="true">▾</span>
-          </button>
-          <div class="nav-dropdown" id="nav-server">
-            <button class="nav-dropdown__link" type="button" data-scroll-target="#start">
-              <span>Startseite</span>
-              <span>Willkommen, News &amp; Einstiegslinks</span>
-            </button>
-            <button class="nav-dropdown__link" type="button" data-scroll-target="#ueber">
-              <span>Über den Server</span>
-              <span>Story, Ziel &amp; Spielart</span>
-            </button>
-          </div>
-        </div>
-
-        <div class="nav-item">
-          <button class="nav-link" type="button" data-dropdown-toggle="nav-rules">
-            Regeln
-            <span class="nav-link__chevron" aria-hidden="true">▾</span>
-          </button>
-          <div class="nav-dropdown" id="nav-rules">
-           <button class="nav-dropdown__link" type="button" data-scroll-target="#regelwerk">
-            <span>Regelwerk</span>
-             <span>Zum Regelwerk scrollen</span>
-            </button>
-          </div>
-        </div>
-
-        <button class="nav-link" type="button" data-scroll-target="#fraktionen">Fraktionen</button>
-        <button class="nav-link" type="button" data-scroll-target="#team">Server-Team</button>
-        <button class="nav-link" type="button" data-scroll-target="#faq">FAQ</button>
-        <button class="nav-link" type="button" data-scroll-target="#kontakt">Kontakt</button>
+  <a class="skip-link" href="#inhalt">Zum Inhalt springen</a>
+  <header class="topbar">
+    <div class="wrap nav">
+      <a class="brand" href="#start" aria-label="Los Santos City Roleplay – Startseite">
+        <span class="brand-mark" aria-hidden="true">LS</span>
+        <span><span class="brand-name">Los Santos City Roleplay</span><br><span class="brand-sub">Serious Roleplay · FiveM</span></span>
+      </a>
+      <nav class="nav-links" aria-label="Hauptnavigation">
+        <a href="#server">Der Server</a><a href="#regelwerk">Regelwerk</a><a href="#fraktionen">Fraktionen</a><a href="#support">Support</a>
       </nav>
-
-      <div class="navbar__actions">
-        <span class="badge-pill">Whitelist geöffnet</span>
-        <button class="btn btn--ghost" type="button" data-scroll-target="#regelwerk">
-          Regelwerk
-        </button>
-        <button class="btn btn--primary" type="button" onclick="window.open('https://discord.gg/2ffMuAfWZ6', '_blank')">
-          <span class="btn__dot" aria-hidden="true"></span>
-          Discord beitreten
-        </button>
-        <button
-          class="navbar__toggle"
-          id="navbarToggle"
-          type="button"
-          aria-label="Mobiles Menü umschalten"
-          aria-expanded="false"
-          aria-controls="mobileMenu"
-        >
-          <span class="navbar__toggle-line" aria-hidden="true"></span>
-        </button>
-      </div>
+      <a class="nav-cta" href="https://discord.gg/2ffMuAfWZ6" target="_blank" rel="noopener noreferrer">Discord beitreten <span aria-hidden="true">↗</span></a>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-label="Menü öffnen" aria-expanded="false" aria-controls="mobileLinks">☰</button>
     </div>
-
-    <!-- Mobiles Menü -->
-    <div class="navbar__mobile-menu" id="mobileMenu">
-      <div class="navbar__mobile-inner">
-        <div class="navbar__mobile-group-label">Server</div>
-        <button type="button" data-scroll-target="#start">Startseite</button>
-        <button type="button" data-scroll-target="#ueber">Über den Server</button>
-
-        <div class="navbar__mobile-group-label">Gameplay</div>
-        <button type="button" data-scroll-target="#regelwerk">Regelwerk</button>
-        <button type="button" data-scroll-target="#fraktionen">Fraktionen</button>
-
-        <div class="navbar__mobile-group-label">Community</div>
-        <button type="button" data-scroll-target="#team">Server-Team</button>
-        <button type="button" data-scroll-target="#faq">FAQ</button>
-        <button type="button" data-scroll-target="#kontakt">Kontakt</button>
-      </div>
-    </div>
+    <nav class="mobile-links" id="mobileLinks" aria-label="Mobiles Menü">
+      <a href="#server">Der Server</a><a href="#regelwerk">Regelwerk</a><a href="#fraktionen">Fraktionen</a><a href="#support">Support</a><a href="https://discord.gg/2ffMuAfWZ6" target="_blank" rel="noopener noreferrer">Discord beitreten ↗</a>
+    </nav>
   </header>
 
-  <main>
-    <!-- =========================================================
-         STARTSEITE / HERO
-         ========================================================= -->
-<section class="hero" id="start">
-  <div class="container hero-grid">
-    <div class="reveal">
-      <div class="eyebrow">
-        <span class="eyebrow-orb" aria-hidden="true"></span>
-        Dein Abend. Deine Story. Dein Server.
-      </div>
-      <h1 class="hero-title">
-        Willkommen auf <span>Los Santos City Roleplay</span> –
-        dem Roleplay‑Server, der sich wie eine
-        fortlaufende Serie anfühlt.
-      </h1>
-      <p class="hero-lead">
-        Play Fair
-      </p>
-      <div class="hero-meta" aria-label="Argumente für den Server">
-        Kein 0815 Server
-      </div>
-      <div class="hero-actions">
-        Realer als alle andere Server
-      </div>
-    </div>
-
-    <!-- NEUER LOGO-BLOCK RECHTS -->
-    <div class="hero-logo-panel">
-      <img
-        src="lacrp.png"
-        alt="Los Santos City Roleplay Logo"
-        class="hero-logo-panel-img">
-    </div>
-  </div>
-</section>
-
-    <!-- =========================================================
-         ÜBER DEN SERVER
-         ========================================================= -->
-    <section class="section" id="ueber">
-      <div class="container">
-        <div class="section-header">
-  <div>
-    <div class="section-kicker">Regelwerk</div>
-    <h2 class="section-title">Klar, fair und <span>verständlich</span>.</h2>
-  </div>
-  <p class="section-subtitle">
-    Ein gut lesbares Regelwerk schützt alle Beteiligten. …
-  </p>
-</div>
-
-        <div class="about-grid">
-          <div class="reveal">
-            <h3>Geschichte &amp; Ziel des Projekts</h3>
-            <p style="font-size:0.92rem; color:var(--muted);">
-              LSCRP spielt in <strong>Los Santos</strong>.
-              Die Stadt entwickelt sich mit Entscheidungen der Spieler:innen –
-              Realität, Gesetze und Machtverhältnisse entstehen aus dem Roleplay.
-            </p>
-            <ul class="about-list">
-              <li><strong>Spielart:</strong> Serious Roleplay mit Platz für humorvolle Momente.</li>
-              <li><strong>Benötigte Leistung:</strong>Kommt Bald.</li>
-              <li><strong>Ziel:</strong> Langfristiger RP‑Server mit transparenten Regeln und aktiver Community‑Gestaltung.</li>
-            </ul>
-
-            <div class="about-pill-row">
-              <span class="chip chip--blue">Eigene Lore</span>
-              <span class="chip chip--blue">Ausbalancierte Wirtschaft</span>
-              <span class="chip chip--blue">Event‑Team für Story‑Arcs</span>
-              <span class="chip chip--blue">Realität</span>
-            </div>
+  <main id="inhalt">
+    <section class="hero" id="start">
+      <div class="wrap hero-grid">
+        <div>
+          <div class="eyebrow">Los Santos · Deine Geschichte</div>
+          <h1>Roleplay, das von <span>euch</span> lebt.</h1>
+          <p class="hero-copy">Los Santos City Roleplay ist ein deutschsprachiger Serious-Roleplay-Server auf FiveM. Erschaffe eine glaubwürdige Figur, triff Entscheidungen und gestalte Geschichten gemeinsam mit der Community.</p>
+          <div class="hero-actions">
+            <a class="button" href="https://discord.gg/2ffMuAfWZ6" target="_blank" rel="noopener noreferrer">Zum Discord <span aria-hidden="true">↗</span></a>
+            <a class="button button-secondary" href="#regelwerk">Regelwerk lesen <span aria-hidden="true">↓</span></a>
           </div>
+          <p class="hero-note">Respekt. Fairness. Serious Roleplay.</p>
+        </div>
+        <aside class="hero-panel" aria-label="LSCRP auf einen Blick">
+          <div class="panel-top"><span>LSCRP / Los Santos</span><span class="status">Community</span></div>
+          <div class="panel-monogram" aria-hidden="true">LS</div>
+          <div class="panel-foot"><span><strong>FiveM</strong> Roleplay</span><span><strong>DE</strong> Community</span><span><strong>01</strong> gemeinsame Story</span></div>
+        </aside>
+      </div>
+    </section>
 
-          <aside class="about-highlight reveal">
-            <h3 style="margin-top:0;">Fraktionen &amp; besondere Features</h3>
-            <p>
-              LSCRP setzt auf ein klares Fraktionssystem mit nachvollziehbaren
-              Strukturen und fairen Aufstiegsmöglichkeiten.
-            </p>
-            <ul class="about-list">
-              <li><strong>Fraktionen:</strong> Staatsfraktionen, legale Organisationen, Untergrund‑Strukturen.</li>
-              <li><strong>Features:</strong> Eigenes Inventar‑System, Jobs &amp; Berufe, dynamische Events, Housing, Firmen.</li>
-              <li><strong>Unterschied:</strong> Story‑orientierte Events, konsequente Regelkommunikation und ein Team, das aktiv mediativ statt nur strafend agiert.</li>
-            </ul>
-          </aside>
+    <section class="section" id="server">
+      <div class="wrap">
+        <div class="section-heading">
+          <div><div class="section-kicker">Worum es geht</div><h2>Eine Welt. Viele Perspektiven.</h2></div>
+          <p class="section-intro">Im Mittelpunkt steht das gemeinsame Erzählen: glaubwürdige Charaktere, nachvollziehbare Entscheidungen und Platz für die Geschichten aller Beteiligten.</p>
+        </div>
+        <div class="principles">
+          <article class="principle"><span class="principle-index">01 / RESPEKT</span><h3>Hinter jeder Rolle ist ein Mensch.</h3><p>Ein respektvoller Umgang ist die Grundlage für gutes RP – auch dann, wenn Charaktere miteinander im Konflikt stehen.</p></article>
+          <article class="principle"><span class="principle-index">02 / FAIRNESS</span><h3>Miteinander statt gegeneinander.</h3><p>Gib anderen Raum zu reagieren und gestalte Situationen so, dass daraus gemeinsames Roleplay entstehen kann.</p></article>
+          <article class="principle"><span class="principle-index">03 / KONSEQUENZ</span><h3>Entscheidungen haben Folgen.</h3><p>Spiele deinen Charakter glaubwürdig und situationsgerecht. IC- und OOC-Informationen bleiben getrennt.</p></article>
         </div>
       </div>
     </section>
 
-    <!-- =========================================================
-         REGELWERK
-         ========================================================= -->
-   <section class="section" id="regelwerk">
-  <div class="container">
-    <div class="section-header reveal">
-      <div>
-        <div class="section-kicker">Regelwerk</div>
-        <h2 class="section-title">Klar, fair und <span>verständlich</span>.</h2>
-      </div>
-      <p class="section-subtitle">
-        Ein gut lesbares Regelwerk schützt alle Beteiligten. Hier findest du alle
-        Regeln direkt auf einen Blick – ohne Filter oder Kategorien.
-      </p>
-    </div>
-
-    <div aria-label="Regelwerk">
-
-      <!-- Discord-Regeln -->
-<div id="rules-discord" data-rule-category="discord">
-  <h3 class="rule-category-title">Discord-Regeln</h3>
-  <ul class="rule-list">
-
-
-    <!-- DC‑01 – Über diesen Discord -->
-    <li class="rule-item" data-search-text="discord server lscrp blitzal3x info">
-      <button class="rule-toggle" type="button">
-        <span class="rule-number">DC‑01</span>
-        <span class="rule-title">Über diesen Discord</span>
-        <span class="rule-tag">Discord</span>
-      </button>
-      <div class="rule-body">
-        Dieser Discord ist der offizielle Discord des FiveM‑Roleplay‑Servers
-        <strong>Los Santos City Roleplay (LSCRP)</strong>. Der Server wird von
-        <strong>Blitzal3x</strong> geleitet.<br><br>
-        Mit dem Beitritt auf den Discord und der Nutzung unserer Kanäle
-        erkennst du dieses Regelwerk an.
-      </div>
-    </li>
-
-
-    <!-- DC‑02 – Allgemeine Grundregeln -->
-    <li class="rule-item" data-search-text="allgemeine grundregeln respekt beleidigung rassismus jugendschutz sprache tos">
-      <button class="rule-toggle" type="button">
-        <span class="rule-number">DC‑02</span>
-        <span class="rule-title">Allgemeine Grundregeln</span>
-        <span class="rule-tag">Discord</span>
-      </button>
-      <div class="rule-body">
-        <ul style="padding-left:1.3rem; margin:0.2rem 0 0;">
-          <li><strong>Respektvoller Umgang:</strong> Kein Mobbing, keine
-            Beleidigungen, kein Herabwürdigen anderer.</li>
-          <li><strong>Keine Diskriminierung:</strong> Keine rassistischen,
-            sexistischen, homophoben oder sonst diskriminierenden Aussagen.</li>
-          <li><strong>Discord ToS &amp; Guidelines:</strong> Die offiziellen Regeln
-            von Discord gelten immer:
-            <a href="https://discord.com/terms" target="_blank" rel="noreferrer noopener">discord.com/terms</a>,
-            <a href="https://discord.com/guidelines" target="_blank" rel="noreferrer noopener">discord.com/guidelines</a>.
-          </li>
-          <li><strong>Jugendschutz &amp; Inhalte:</strong> Keine NSFW‑Inhalte
-            (Pornographie, extreme Gewalt etc.). Kein Teilen von illegalen Inhalten
-            wie Cracks, Hacks, Leaks oder urheberrechtlich geschütztem Material ohne
-            Erlaubnis.</li>
-          <li><strong>Sprache:</strong> Hauptsprache ist Deutsch. Englisch ist
-            in Ordnung, solange alle Beteiligten mitkommen.</li>
-          <li><strong>Server Hate ist verboten</strong> Das gezielte Schlechtreden, Hetzen oder Provokationen gegen Los Santos City Roleplay – 
-            auch von externen Personen oder „fremden Meinungen“, schädigt den Ruf, das Community-Klima und die Weiterentwicklung des Servers.
-            Konstruktive Kritik ist nur in den dafür vorgesehenen Channels erlaubt, sachlich und respektvoll</li>
-          <li><strong>Cross-Server-Hate ist verboten</strong> Es ist untersagt, andere RP-Server, deren Spieler oder Communities zu beleidigen, haten oder lächerlich machen,
-            während man auf Los Santos City Roleplay aktiv ist.
-            Solches Verhalten schadet dem Ruf von LSCRP und kann zu sofortigen Sanktionen führen, einschließlich Warn, Kick oder Bann</li>
-        </ul>
-      </div>
-    </li>
-
-
-    <!-- DC‑03 – Verhalten im Server -->
-    <li class="rule-item" data-search-text="verhalten respekt umgangston spam ping everyone support">
-      <button class="rule-toggle" type="button">
-        <span class="rule-number">DC‑03</span>
-        <span class="rule-title">Verhalten im Server</span>
-        <span class="rule-tag">Discord</span>
-      </button>
-      <div class="rule-body">
-        <p style="margin:0 0 0.4rem;"><strong>3.1 Respekt &amp; Umgangston</strong></p>
-        <ul style="padding-left:1.3rem; margin:0 0 0.5rem;">
-          <li>Keine persönlichen Angriffe, kein „Dissen“ als Deckmantel für Beleidigungen.</li>
-          <li>Kritik ist erlaubt, solange sie <strong>sachlich und fair</strong> bleibt.</li>
-          <li>Triggernde Themen (Politik, Religion, extreme Inhalte) nur dort, wo sie
-              ausdrücklich erlaubt sind – und dann respektvoll.</li>
-        </ul>
-        <p style="margin:0 0 0.4rem;"><strong>3.2 Spam &amp; Ping‑Regeln</strong></p>
-        <ul style="padding-left:1.3rem; margin:0;">
-          <li>Kein Spam (Emotes, Links, wiederholte Nachrichten).</li>
-          <li>Kein unnötiges Pingen von
-              <code>@everyone</code>, <code>@here</code> oder Rollen wie
-              <code>@supporter</code>.</li>
-        </ul>
-      </div>
-    </li>
-
-
-    <!-- DC‑04 – Voice-Chat & Talk -->
-    <li class="rule-item" data-search-text="voice talk mikro soundboard stream aufnahme">
-      <button class="rule-toggle" type="button">
-        <span class="rule-number">DC‑04</span>
-        <span class="rule-title">Voice‑Chat &amp; Talk</span>
-        <span class="rule-tag">Discord</span>
-      </button>
-      <div class="rule-body">
-        <p style="margin:0 0 0.4rem;"><strong>4.1 Verhalten im Voice</strong></p>
-        <ul style="padding-left:1.3rem; margin:0 0 0.5rem;">
-          <li>Keine Schreierei, kein Soundboard‑Spam, keine dauerhaften Störgeräusche.</li>
-          <li>Kein gezieltes Trollen, kein „Channel Hopping“ (ständiges Rein/Raus‑Springen).</li>
-          <li>Stelle dein Mikrofon so ein, dass andere nicht permanent
-              deine Hintergrundgeräusche hören.</li>
-        </ul>
-        <p style="margin:0 0 0.4rem;"><strong>4.2 Aufnahmen &amp; Streams</strong></p>
-        <ul style="padding-left:1.3rem; margin:0;">
-          <li>In öffentlich markierten Voice‑Kanälen kann jederzeit gestreamt oder
-              aufgenommen werden.</li>
-          <li>Für private Gespräche nutze entsprechende Private‑Voice‑Kanäle
-              oder hole dir vorher die ausdrückliche Zustimmung aller Beteiligten.</li>
-        </ul>
-      </div>
-    </li>
-
-
-    <!-- DC‑05 – Datenschutz & Daten -->
-    <li class="rule-item" data-search-text="datenschutz daten doxxing privacy logging stream clips">
-      <button class="rule-toggle" type="button">
-        <span class="rule-number">DC‑05</span>
-        <span class="rule-title">Datenschutz &amp; Daten auf dem Server</span>
-        <span class="rule-tag">Discord</span>
-      </button>
-      <div class="rule-body">
-        <p style="margin:0 0 0.4rem;"><strong>5.1 Persönliche Daten</strong></p>
-        <ul style="padding-left:1.3rem; margin:0 0 0.5rem;">
-          <li>Teile keine sensiblen Daten: Adressen, Telefonnummern, private E‑Mails,
-              reale Namen anderer ohne deren Einwilligung.</li>
-          <li>Leaks / Doxxing führen zu einem <strong>sofortigen Bann</strong>.</li>
-        </ul>
-
-
-        <p style="margin:0 0 0.4rem;"><strong>5.2 Aufzeichnungen &amp; Clips</strong></p>
-        <ul style="padding-left:1.3rem; margin:0 0 0.5rem;">
-          <li>Streams auf diesem Server (z. B. in Stage‑/Voice‑Kanälen) können aufgezeichnet
-              und auf Twitch/YouTube veröffentlicht werden.</li>
-          <li>Mit Teilnahme erklärst du dich einverstanden, dass deine Stimme ggf. im
-              Stream/Clip auftauchen kann. Wenn du das nicht möchtest, nutze z. B. den
-              Sprachkanal <strong>„Musik &amp; Chill“</strong>.</li>
-        </ul>
-
-
-        <p style="margin:0 0 0.4rem;"><strong>5.3 Logging</strong></p>
-        <ul style="padding-left:1.3rem; margin:0;">
-          <li>Discord speichert Chatverläufe; Moderation kann gelöschte Nachrichten im Rahmen
-              der verfügbaren Tools (Audit‑Log / Bots) einsehen.</li>
-          <li>Missbrauch von Screenshots oder Logs zur Bloßstellung anderer außerhalb des
-              Regelprozesses ist nicht erlaubt.</li>
-        </ul>
-      </div>
-    </li>
-
-
-  </ul>
-</div>
-
-
-            <!-- Strafen -->
-            <div id="rules-strafen" data-rule-category="strafen">
-              <h3 class="rule-category-title">Strafen</h3>
-              <ul class="rule-list">
-                <li class="rule-item" data-search-text="verwarnung ban strafe staff ermessen">
-                  <button class="rule-toggle" type="button">
-                    <span class="rule-number">ST‑01</span>
-                    <span class="rule-title">Staff‑Ermessen</span>
-                    <span class="rule-tag">Strafen</span>
-                  </button>
-                  <div class="rule-body">
-                    Strafen werden durch das Team nach Schwere des Verstoßes,
-                    Vorgeschichte und Verhalten in der Situation bewertet. Mögliche
-                    Konsequenzen reichen von einer Verwarnung bis zum Permanentbann.
-                  </div>
-                </li>
-              </ul>
+    <section class="section" id="regelwerk">
+      <div class="wrap">
+        <div class="section-heading">
+          <div><div class="section-kicker">Offizielle Grundlage</div><h2>Regelwerk LSCRP</h2></div>
+          <p class="section-intro">Die Regeln gelten für den FiveM-Server, den offiziellen Discord, das Support- und Ticketsystem sowie weitere offizielle LSCRP-Plattformen. Bitte lies sie vor deiner Teilnahme vollständig.</p>
+        </div>
+        <div class="rule-layout">
+          <aside class="rule-aside" aria-label="Regelwerk-Navigation">
+            <div class="rule-meta"><small>Offizielle Fassung</small><strong>Stand: 28.09.2026</strong></div>
+            <p class="toc-title">Direkt zu §</p>
+            <nav class="toc" aria-label="Abschnitte des Regelwerks">
+              <a href="#par1">§1 Allgemeines</a><a href="#par2">§2 Fairness</a><a href="#par3">§3 Roleplay</a><a href="#par4">§4 Gewalt &amp; Eskalation</a><a href="#par5">§5 New Life &amp; Verletzungen</a><a href="#par6">§6 Kriminalität</a><a href="#par7">§7 Staatsfraktionen</a><a href="#par8">§8 Fahrzeuge</a><a href="#par9">§9 Technik</a><a href="#par10">§10 Kommunikation &amp; Streaming</a><a href="#par11">§11 Charaktere &amp; Accounts</a><a href="#par12">§12 Support &amp; Sanktionen</a><a href="#schluss">Schlussbestimmungen</a>
+            </nav>
+          </aside>
+          <div>
+            <div class="rule-tools">
+              <label class="search-wrap"><span class="search-icon" aria-hidden="true">⌕</span><span class="sr-only">Regelwerk durchsuchen</span><input id="ruleSearch" type="search" placeholder="Regelwerk durchsuchen …" autocomplete="off"></label>
+              <button class="tool-button" id="expandAll" type="button">Alle öffnen</button>
+              <button class="tool-button" id="collapseAll" type="button">Alle schließen</button>
+              <span class="result-count" id="resultCount" aria-live="polite">12 von 12 Abschnitten</span>
             </div>
-             <!-- Vollständige Fassung des Regelwerks -->
-            <article class="card" id="rules-full" style="margin-top:1.6rem;">
-              <h3 class="card-title">Los Santos City Roleplay – Offizielles Regelwerk</h3>
-              <p class="card-text"><strong>Stand:</strong> 21.07.2026</p>
-              <p class="card-text">
-                Dieses Regelwerk gilt für alle Angebote von Los Santos City Roleplay (FiveM‑Server,
-                Discord, Forum u. a.). Mit dem Betreten eines unserer Angebote erkennst du dieses
-                Regelwerk an.
-              </p>
-
-
-              <!-- 1. Grundprinzipien & Geltungsbereich -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                1. Grundprinzipien &amp; Geltungsbereich
-              </h4>
-
-
-              <p class="card-text">
-                <strong>1.1 Grundgedanke von Los Santos City Roleplay</strong><br>
-                Los Santos City Roleplay (im Folgenden „LSCRP“) ist ein deutschsprachiger
-                Serious‑Roleplay‑Server auf Basis von FiveM/GTA V. Unser Ziel ist es, eine immersive,
-                glaubwürdige und respektvolle Spielumgebung zu schaffen, in der die Spieler:innen gemeinsam
-                Geschichten erzählen.
-              </p>
-              <p class="card-text">Dafür gelten folgende Grundprinzipien:</p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Respekt – Hinter jedem Charakter steht ein Mensch.</li>
-                <li>Fairness – Wir spielen miteinander, nicht gegeneinander.</li>
-                <li>Realismus – Handlungen sollen im Rahmen der Spielwelt plausibel sein.</li>
-                <li>Konsequenz – Taten haben Ingame‑Folgen.</li>
-                <li>Transparenz – Regeln werden klar kommuniziert und fair durchgesetzt.</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>1.2 Geltungsbereich</strong><br>
-                Dieses Regelwerk gilt für:
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>den FiveM‑Server „Los Santos City Roleplay“</li>
-                <li>den zugehörigen Discord‑Server</li>
-                <li>alle weiteren offiziellen Kommunikationskanäle und Plattformen von LSCRP</li>
-              </ul>
-              <p class="card-text">
-                Die Regeln gelten unabhängig davon, ob du dich im Spiel, im Discord oder in anderen
-                zugehörigen Bereichen befindest. Verhalten außerhalb unserer Plattform kann in Extremfällen
-                (z. B. schwere Beleidigungen, Drohungen, Doxxing, schwere Straftaten) ebenfalls zu Maßnahmen
-                auf LSCRP führen, wenn ein Zusammenhang zur Community besteht.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>1.3 Änderungen des Regelwerks</strong>
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Die Projektleitung behält sich vor, dieses Regelwerk jederzeit anzupassen.</li>
-                <li>Änderungen werden in der Regel im Discord angekündigt.</li>
-                <li>Es liegt in deiner Verantwortung, dich regelmäßig über den aktuellen Stand zu informieren.</li>
-                <li>Mit der weiteren Nutzung des Servers nach einer Änderung erkennst du das angepasste Regelwerk an.</li>
-              </ul>
-
-
-              <!-- 2. Allgemeines Verhalten & Community-Regeln -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                2. Allgemeines Verhalten &amp; Community‑Regeln
-              </h4>
-
-
-              <p class="card-text">
-                <strong>2.1 Respektvoller Umgang</strong><br>
-                Behandle andere Spieler:innen, Teammitglieder und Externe stets respektvoll.
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Beleidigungen, Diskriminierung, rassistische, sexistische, homophobe, transfeindliche
-                    oder anderweitig menschenverachtende Aussagen sind strikt untersagt.</li>
-                <li>Andauernde Provokationen, Mobbing, Ausgrenzung oder öffentliche Hetze gegen Personen
-                    oder Gruppen werden nicht toleriert.</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>2.2 Sprache &amp; Ausdrucksweise</strong><br>
-                Auf allen Kanälen ist deutsche Sprache erwünscht. Akzente und Dialekte sind zulässig,
-                solange du verstanden wirst.
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Exzessive Schimpfwörter, vulgäre Sprache oder Beleidigungen sind zu unterlassen.</li>
-                <li>NS‑Bezüge, verfassungsfeindliche Symbole, Terrorverherrlichung o. Ä. sind strikt verboten –
-                    auch „nur als Spaß“.</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>2.3 Werbung &amp; externe Inhalte</strong>
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem">
-                <li>Fremdwerbung (andere Server, eigene Projekte, Streams, Social Media etc.) ist ohne
-                    ausdrückliche Genehmigung der Projektleitung untersagt.</li>
-                <li>Links zu problematischen Inhalten (Gewaltverherrlichung, Pornografie,
-                    extremistische Inhalte usw.) sind verboten.</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>2.4 Umgang mit Teammitgliedern</strong>
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Teammitglieder sind dir gegenüber weisungsbefugt, soweit es den Server betrifft.</li>
-                <li>Diskutiere Maßnahmen sachlich und ruhig.</li>
-                <li>Öffentliche Diskussionen über Strafmaße, Bans o. Ä. sind zu vermeiden –
-                    nutze die vorgesehenen Support‑ und Beschwerdewege.</li>
-              </ul>
-
-
-              <!-- 3. Technische Regeln & Accounts -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                3. Technische Regeln &amp; Accounts
-              </h4>
-
-
-              <p class="card-text">
-                <strong>3.1 Mindestanforderungen</strong><br>
-                Um auf LSCRP spielen zu können, benötigst du:
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>eine legale Kopie von GTA V</li>
-                <li>einen gültigen FiveM‑Client</li>
-                <li>einen funktionierenden Discord‑Account</li>
-                <li>ein funktionierendes Mikrofon (Pflicht)</li>
-                <li>ein reifes Auftreten</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>3.2 Accountregeln</strong>
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Jede reale Person darf nur einen Hauptaccount besitzen.</li>
-                <li>Multi‑Accounting zur Umgehung von Sperren ist verboten.</li>
-                <li>Account‑Sharing ist untersagt – du bist für deinen Account verantwortlich.</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>3.3 Nicknames &amp; Avatare</strong><br>
-                Nutzernamen und Avatare dürfen keine beleidigenden, extremistischen, pornografischen oder
-                sonstig unangemessenen Inhalte enthalten.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>3.4 Technische Hilfsmittel &amp; Mods</strong>
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Externe Programme mit unfairen Vorteilen (Cheats, Aimbots, ESP, Makros etc.)
-                    sind strengstens verboten.</li>
-                <li>Grafik‑ und Soundmods sind nur erlaubt, wenn sie keinen unfairen Vorteil bringen
-                    und die Spielbarkeit nicht einschränken.</li>
-                <li>Die Projektleitung kann bestimmte Mods jederzeit verbieten.</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>3.5 Bugs, Exploits &amp; Duping</strong><br>
-                Das Ausnutzen von Bugs, Dupes oder Exploits ist strengstens untersagt.
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Wirtschaftliche Vorteile durch Fehler können zurückgesetzt werden.</li>
-                <li>Gefundene Bugs sind unverzüglich dem Team zu melden (Support‑Ticket, Bug‑Report‑Channel).</li>
-              </ul>
-
-
-              <!-- 4. Roleplay-Grundlagen -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                4. Roleplay‑Grundlagen
-              </h4>
-
-
-              <p class="card-text">
-                <strong>4.1 Was ist Roleplay?</strong><br>
-                Roleplay (RP) bedeutet, dass du eine fiktive Figur – deinen Charakter – darstellst, die sich
-                in der Spielwelt so verhält, wie es eine reale Person unter denselben Umständen tun würde.
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Du spielst nicht dich selbst, sondern eine Rolle.</li>
-                <li>Du handelst auf Basis des Wissens deines Charakters (IC‑Wissen).</li>
-                <li>Realistische Entscheidungen und glaubwürdiges Verhalten stehen im Vordergrund.</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>4.2 In‑Character (IC) vs. Out‑of‑Character (OOC)</strong><br>
-                In‑Character (IC): Alles, was dein Charakter sagt, denkt oder tut.<br>
-                Out‑of‑Character (OOC): Alles, was du als Spieler:in außerhalb der Rolle sagst oder tust
-                (Discord, Support, OOC‑Chat).
-              </p>
-              <p class="card-text">
-                Grundsatz: IC‑Konflikte werden IC gelöst, OOC‑Konflikte OOC (Support, Tickets, Gespräch mit dem Team).
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>4.3 Pflicht zum Roleplay</strong><br>
-                Sobald du dich auf dem Server befindest, bist du im RP.
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Verhalte dich so, als wärst du tatsächlich in der Welt von Los Santos.</li>
-                <li>Lächerliches, trollendes oder völlig unrealistisches Verhalten ist zu unterlassen.</li>
-                <li>Beispiele: zielloses Rasen, grundloses Rammen oder Schießen, ständiges „Herumblödeln“
-                    in ernsten Situationen.</li>
-              </ul>
-
-
-              <!-- 5. Verbotene Handlungen im Roleplay -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                5. Verbotene Handlungen im Roleplay
-              </h4>
-
-
-              <p class="card-text">
-                <strong>5.1 Metagaming</strong><br>
-                Metagaming bezeichnet die Nutzung von OOC‑Informationen für IC‑Entscheidungen
-                und ist strengstens verboten.
-              </p>
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Infos aus Streams, Discord‑Nachrichten oder anderen Quellen dürfen nicht ohne
-                    IC‑Grund genutzt werden.</li>
-                <li>Das Erkennen von Stimmen aus OOC‑Kontext (TS/Discord) darf nicht zur IC‑Identifikation dienen.</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>5.2 Powergaming</strong><br>
-                Powergaming ist das Erzwingen von Situationen, in denen dein Gegenüber keine
-                realistische Chance hat zu reagieren oder zu agieren, und ist verboten.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>5.3 Random Deathmatch (RDM) &amp; Vehicle Deathmatch (VDM)</strong><br>
-                RDM und VDM – also grundloses Töten oder Überfahren ohne RP‑Hintergrund – sind strengstens untersagt.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>5.4 Fail‑RP</strong><br>
-                Fail‑RP ist Verhalten, das offensichtlich unrealistisch ist oder dem Charakterkonzept widerspricht
-                (z. B. Ignorieren schwerer Verletzungen).
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>5.5 Combat‑Logging &amp; Combat‑Storing</strong><br>
-                Das Verlassen des Servers oder das Wegsichern von Equipment, um RP‑Konsequenzen zu umgehen,
-                ist verboten und wird hart sanktioniert.
-              </p>
-
-
-              <!-- 6. New-Life-Regel & Todesfälle -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                6. New‑Life‑Regel &amp; Todesfälle
-              </h4>
-
-
-              <p class="card-text">
-                <strong>6.1 New‑Life‑Regel (NLR)</strong><br>
-                Nach einem Server‑Tod vergisst dein Charakter die direkten Umstände seines Todes
-                (Täter, exakter Ort, Details) und kehrt nicht sofort an den Tatort zurück.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>6.2 Ausnahmen &amp; Sonderfälle</strong><br>
-                Bei durch das Team veranlassten Toden oder geplanten Charaktertoden können
-                gesonderte Regeln gelten; dies ist vorab mit dem Team abzusprechen.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>6.3 Bewusstlosigkeit &amp; schwere Verletzungen</strong><br>
-                Bewusstlosigkeit und schwere Verletzungen sind auszuspielen. Medics und Team
-                können im Zweifel die Schwere interpretieren.
-              </p>
-
-
-              <!-- 7. Kommunikation, Voice & Text -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                7. Kommunikation, Voice &amp; Text
-              </h4>
-
-
-              <p class="card-text">
-                <strong>7.1 Voice‑Chat</strong><br>
-                Voice‑RP ist Pflicht. Ein funktionierendes Mikrofon ist Voraussetzung, störende
-                Dauer‑Nebengeräusche sind zu vermeiden.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>7.2 OOC‑Kommunikation im Spiel</strong><br>
-                OOC‑Kommunikation im Ingame‑Voice ist grundsätzlich verboten.
-                Technische Probleme werden IC umschrieben, längere Klärungen erfolgen im Support.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>7.3 Funk, Handy &amp; externe Tools</strong><br>
-                Funk und Handy gelten als IC‑Kommunikation. Externe Tools (z. B. Discord‑Voice)
-                dürfen RP‑Mechaniken nicht aushebeln.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>7.4 Umgangston</strong><br>
-                Auch in hitzigen Situationen ist ein Mindestmaß an Respekt zu wahren – exzessives
-                Anschreien oder Real‑Life‑Beleidigungen sind zu unterlassen.
-              </p>
-
-
-              <!-- 8. Kriminalität & illegale Aktivitäten -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                8. Kriminalität &amp; illegale Aktivitäten
-              </h4>
-
-
-              <p class="card-text">
-                Illegales RP ist ausdrücklich erwünscht, solange es vorbereitet ist, einen
-                nachvollziehbaren RP‑Hintergrund hat und anderen Raum für RP lässt.
-                Reines „Grinden“ oder Trolling ist unerwünscht.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>8.2 Überfälle &amp; Entführungen</strong><br>
-                Opfer müssen RP‑Möglichkeiten haben; rein wirtschaftlich motivierte Aktionen
-                ohne Story sind unerwünscht. Durch das Kleidungs‑Script ist es erlaubt,
-                anderen Personen Kleidung und Schmuck zu rauben. Verboten ist das Entwenden
-                oder Tragen von Dienst‑ bzw. Staatsuniformen (z. B. Polizei, Rettungsdienst, FD).
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>8.3 Banküberfälle &amp; Großkriminalität</strong><br>
-                Für große Raubzüge gelten Sonderregeln (im Discord einsehbar). Staatsfraktionen müssen
-                reagieren können; Verhandlungen und mehr als nur Schießereien sind Pflicht.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>8.4 Folter, Gewalt, sexuelle Inhalte</strong><br>
-                Detaillierte Folter, sexualisierte Gewalt oder extrem brutale Darstellungen
-                sind verboten. Sexuelle Inhalte nur dezent und mit Zustimmung aller Beteiligten.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>8.5 Kriminelle Gruppierungen</strong><br>
-                Benötigen Bewerbung &amp; Freigabe durch die Verwaltung. Reines „Abfarmen“ schwächerer
-                Spieler:innen ohne RP‑Mehrwert ist untersagt.
-              </p>
-
-
-              <!-- 9. Staatsfraktionen -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                9. Staatsfraktionen (Polizei, Rettungsdienst, Fire Department, AMR)
-              </h4>
-
-
-              <p class="card-text">
-                Staatsfraktionen tragen besondere Verantwortung für RP‑Fluss, Sicherheit und
-                faire Durchsetzung der Gesetze. Sie handeln nach Verhältnismäßigkeit und
-                bleiben in Konflikten professionell.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>9.2 Polizei</strong><br>
-                Kein Powergaming, keine übermäßige Gewaltanwendung, schwere Eingriffe
-                (Razzien, Durchsuchungen) müssen gut begründet sein.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>9.3 Rettungsdienst &amp; 9.4 Fire Department</strong><br>
-                Handeln neutral, beteiligen sich nicht an Kriminalität. Überfälle auf
-                Personal sind nur in klar begründeten Ausnahmesituationen zulässig und
-                niemals rein wirtschaftlich motiviert.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>9.5 AMR</strong><br>
-                Ärzt:innen und Pflegepersonal handeln neutral, können bei Gefahr für
-                Leib und Leben Patienten ablehnen oder die Polizei hinzuziehen.
-              </p>
-
-
-              <p class="card-text" style="margin-top:0.6rem;">
-                <strong>9.6 Fraktionsinterne Regeln</strong><br>
-                Jede Staatsfraktion besitzt zusätzliche interne Regeln. Verstöße können
-                fraktionsinterne und serverweite Konsequenzen haben.
-              </p>
-
-
-              <!-- 10. Wirtschaft -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                10. Wirtschaft
-              </h4>
-
-
-              <p class="card-text">
-                Preise, Löhne und Wirtschaftssystem werden vom Serverteam festgelegt.
-                Wirtschaftliche Exploits sind zu melden und werden zurückgesetzt.
-              </p>
-
-
-              <!-- 11. Fahrzeuge, Verkehr & Fahrverhalten -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                11. Fahrzeuge, Verkehr &amp; Fahrverhalten
-              </h4>
-
-
-              <p class="card-text">
-                Realistisches Fahrverhalten ist Pflicht. Dauerhafte Straßenrennen,
-                Driften durch Menschenmengen und der Einsatz von Fahrzeugen als Waffe
-                ohne starken RP‑Grund sind untersagt.
-              </p>
-
-
-              <!-- 12. Waffen, Kämpfe & Eskalation -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                12. Waffen, Kämpfe &amp; Eskalation
-              </h4>
-
-
-              <p class="card-text">
-                Waffen sind das letzte Mittel. Vor dem Einsatz steht – wo möglich –
-                eine klare Drohung oder Warnung. Massen‑Schießereien ohne RP‑Hintergrund
-                sind unerwünscht.
-              </p>
-
-
-              <!-- 13. Copbaiting, Trolling & Griefing -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                13. Copbaiting, Trolling &amp; Griefing
-              </h4>
-
-
-              <p class="card-text">
-                Copbaiting (bewusstes Provozieren der Polizei), Trolling und Griefing
-                (gezieltes Stören anderer ohne RP‑Grund) sind verboten und führen i. d. R.
-                zu deutlichen Sanktionen.
-              </p>
-
-
-              <!-- 14. Support, Tickets & Beschwerden -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                14. Support, Tickets &amp; Beschwerden
-              </h4>
-
-
-              <p class="card-text">
-                Nutze die vorgesehenen Supportwege respektvoll und sachlich. Beweise
-                (Clips, Screenshots) helfen bei der Klärung. Team‑Entscheidungen sind
-                grundsätzlich zu akzeptieren; Einsprüche laufen über die offiziellen Kanäle.
-              </p>
-
-
-              <!-- 15. Strafen & Sanktionen -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                15. Strafen &amp; Sanktionen
-              </h4>
-
-
-              <p class="card-text">
-                Strafen dienen dem Schutz der Community und der RP‑Qualität. Sie reichen
-                von Verwarnungen bis hin zum Community‑Ausschluss (CMA), insbesondere bei
-                schweren Verstößen (Rassismus, Cheats, massives Fail‑RP usw.).
-              </p>
-
-
-              <!-- 16. Charaktere, Identitäten & Namensgebung -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                16. Charaktere, Identitäten &amp; Namensgebung
-              </h4>
-
-
-              <p class="card-text">
-                Charaktere tragen realistische Namen (Vor‑ und Nachname, keine „xXKillerXx“),
-                keine Kopien realer Prominenter. Mehrere Charaktere dürfen sich nicht
-                gegenseitig unterstützen oder vernetzen.
-              </p>
-
-
-              <!-- 17. Streaming & Aufnahmen -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                17. Streaming &amp; Aufnahmen
-              </h4>
-
-
-              <p class="card-text">
-                Streaming auf LSCRP erfordert eine Streaminglizenz und die Einhaltung
-                der Plattformregeln. Datenschutz und Privatsphäre anderer sind zu wahren –
-                kein gezieltes Bloßstellen von Spieler:innen oder Team.
-              </p>
-
-
-              <!-- 18. Besondere serverinterne Regeln & Events -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                18. Besondere serverinterne Regeln &amp; Events
-              </h4>
-
-
-              <p class="card-text">
-                Für Events, Lore‑Arcs und Testphasen können zusätzliche oder abweichende
-                Regeln gelten, die im Discord oder Ingame bekannt gegeben werden.
-                LSCRP besitzt eine eigene Lore, die durch Spieler‑RP erweitert,
-                aber nicht widersprochen werden darf.
-              </p>
-
-
-              <!-- 19. Haftungsausschluss & Schlussbestimmungen -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                19. Haftungsausschluss &amp; Schlussbestimmungen
-              </h4>
-
-
-              <p class="card-text">
-                Die Betreiber von Los Santos City Roleplay übernehmen keine Haftung für Schäden,
-                die durch die Nutzung des Servers oder der dazugehörigen Plattformen entstehen.
-                Jede:r Nutzer:in ist für seinen/ihren eigenen technischen Setup und sein/ihr Verhalten
-                selbst verantwortlich.
-              </p>
-              <p class="card-text">
-                Sollte eine Bestimmung dieses Regelwerks unwirksam sein oder werden,
-                bleibt die Wirksamkeit der übrigen Bestimmungen unberührt.
-              </p>
-
-
-              <!-- 20. Ergänzende Hinweise & Empfehlungen -->
-              <h4 style="margin-top:1.1rem; margin-bottom:0.35rem;">
-                20. Ergänzende Hinweise &amp; Empfehlungen
-              </h4>
-
-
-              <ul class="card-text" style="padding-left:1.3rem; margin-top:0.25rem;">
-                <li>Sprich Probleme früh an – Support und Gespräche helfen mehr als Frust.</li>
-                <li>Gib neuen Spieler:innen eine Chance und hilf beim Einstieg ins RP.</li>
-                <li>Sei kreativ und erzähle Geschichten, statt nur den „optimalen“ Geldweg zu spielen.</li>
-                <li>Frag dich in jeder Situation: „Macht das gerade auch den anderen Spaß?“</li>
-                <li>Halte Kontakt zum Team – Feedback hilft, LSCRP besser zu machen.</li>
-              </ul>
-
-
-              <p class="card-text" style="margin-top:1rem;">
-                <strong>Schlusswort:</strong><br>
-                Los Santos City Roleplay lebt von seinen Spieler:innen. Dieses Regelwerk soll keinen Spaß
-                verhindern, sondern einen Rahmen schaffen, in dem alle gemeinsam intensive, lustige und
-                spannende Geschichten erleben können.<br>
-                Habt Spaß, bleibt fair – und willkommen in Los Santos City Roleplay!
-              </p>
-            </article>
+            <div id="ruleList">
+              <details class="rule-article" id="par1" data-rule>
+                <summary><span class="rule-number">§ 01</span><span class="rule-title">Allgemeine Bestimmungen</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>1.1 Geltungsbereich</strong><br>Mit der Nutzung unserer Angebote akzeptierst du dieses Regelwerk und verpflichtest dich, die darin enthaltenen Regeln einzuhalten. Das Regelwerk gilt insbesondere für:</p>
+                  <ul><li>den FiveM-Server</li><li>den offiziellen Discord</li><li>das Support- und Ticketsystem</li><li>weitere offizielle LSCRP-Plattformen</li></ul>
+                  <p><strong>1.2 Hausrecht &amp; Betreiberrecht</strong><br>Die Serverleitung ist berechtigt, Regeln für die Nutzung des Servers und der dazugehörigen Angebote festzulegen, anzupassen und durchzusetzen. Sie kann Maßnahmen ergreifen, wenn das Verhalten eines Nutzers den Serverbetrieb, die Community oder das Spielerlebnis erheblich beeinträchtigt.</p>
+                  <p><strong>1.3 Regeländerungen</strong><br>Das Regelwerk kann jederzeit angepasst, ergänzt oder neu strukturiert werden. Änderungen werden nach Möglichkeit über die offiziellen Kommunikationskanäle bekannt gegeben. Es liegt in der Verantwortung jedes Spielers, sich über die aktuell gültigen Regeln zu informieren.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par2" data-rule>
+                <summary><span class="rule-number">§ 02</span><span class="rule-title">Fairness &amp; respektvoller Umgang</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>2.1 Respekt</strong><br>Jeder Spieler ist respektvoll zu behandeln. Untersagt sind insbesondere:</p>
+                  <ul><li>Rassismus und Diskriminierung</li><li>menschenverachtende Äußerungen</li><li>gezielte Belästigung</li><li>Mobbing und Hetze</li><li>extreme oder wiederholte Beleidigungen</li><li>Drohungen außerhalb des RP</li></ul>
+                  <p><strong>2.2 Fairness</strong><br>Spiele nicht absichtlich gegen andere Spieler, sondern mit ihnen. Verboten sind insbesondere:</p>
+                  <ul><li>Trolling</li><li>Griefing</li><li>absichtliches Zerstören von RP</li><li>gezieltes Stören anderer Spieler</li><li>Ausnutzen von unerfahrenen Spielern</li><li>absichtliches Herbeiführen von Situationen ohne RP-Hintergrund</li></ul>
+                  <p><strong>2.3 Teammitglieder</strong><br>Anweisungen des Teams sind im Rahmen des Serverbetriebs zu befolgen. Unstimmigkeiten mit Teamentscheidungen werden über den vorgesehenen Supportweg geklärt und nicht öffentlich ausgetragen.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par3" data-rule>
+                <summary><span class="rule-number">§ 03</span><span class="rule-title">Roleplay</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>3.1 Grundprinzip</strong><br>LSCRP ist ein Serious-Roleplay-Server. Jeder Spieler muss seinen Charakter glaubwürdig und situationsgerecht darstellen.</p>
+                  <p><strong>3.2 IC &amp; OOC</strong><br>IC (In Character) sind Informationen und Handlungen deines Charakters. OOC (Out of Character) sind Informationen und Handlungen außerhalb des RP. IC- und OOC-Informationen dürfen nicht miteinander vermischt werden.</p>
+                  <p><strong>3.3 Metagaming</strong><br>Das Verwenden von OOC-Informationen für IC-Handlungen ist verboten. Beispiele:</p>
+                  <ul><li>Informationen aus Streams verwenden</li><li>Discord-Nachrichten IC verwenden</li><li>Informationen aus Supportgesprächen verwenden</li><li>Spieler anhand von OOC-Informationen identifizieren</li></ul>
+                  <p><strong>3.4 Powergaming</strong><br>Das Erzwingen von Handlungen gegenüber anderen Spielern ist verboten. Jeder Spieler muss die Möglichkeit erhalten, angemessen auf eine RP-Situation zu reagieren.</p>
+                  <p><strong>3.5 Fail-RP</strong><br>Unrealistisches oder völlig unpassendes Verhalten ist verboten. Beispiele:</p>
+                  <ul><li>schwere Verletzungen ignorieren</li><li>unrealistische Fahrzeugnutzung</li><li>schwere Unfälle ohne Folgen ausspielen</li><li>unrealistisches Verhalten in lebensgefährlichen Situationen</li></ul>
+                </div>
+              </details>
+              <details class="rule-article" id="par4" data-rule>
+                <summary><span class="rule-number">§ 04</span><span class="rule-title">Gewalt, RDM, VDM &amp; Eskalation</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>4.1 RDM</strong><br>Random Deathmatch (RDM) ist das Verletzen oder Töten eines Spielers ohne ausreichenden RP-Grund.</p>
+                  <p><strong>4.2 VDM</strong><br>Vehicle Deathmatch (VDM) ist das absichtliche Anfahren oder Überfahren von Spielern ohne ausreichenden RP-Grund.</p>
+                  <p><strong>4.3 Eskalation</strong><br>Gewalt muss einen nachvollziehbaren RP-Hintergrund besitzen. Sofern die Situation es zulässt, sollte eine Eskalation nachvollziehbar erfolgen: Konflikt → Drohung → Warnung → Gewalt. Tödliche Gewalt sollte nur als letztes Mittel eingesetzt werden.</p>
+                  <p><strong>4.4 Waffen</strong><br>Waffen dürfen nicht grundlos eingesetzt oder zur Erzeugung von sinnlosem Chaos verwendet werden. Massenschießereien ohne entsprechenden RP-Hintergrund sind verboten.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par5" data-rule>
+                <summary><span class="rule-number">§ 05</span><span class="rule-title">New Life, Verletzungen &amp; RP-Folgen</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>5.1 New-Life-Regel</strong><br>Nach einem Server-Tod dürfen unmittelbare Informationen über den Tod nicht für weiteres RP verwendet werden. Dazu gehören insbesondere:</p>
+                  <ul><li>Täter</li><li>genauer Ort</li><li>unmittelbarer Ablauf</li><li>beteiligte Personen</li></ul>
+                  <p>Eine Rückkehr zum unmittelbaren Ort des Todes zur Rache oder Fortsetzung der Situation ist nicht erlaubt.</p>
+                  <p><strong>5.2 Verletzungen</strong><br>Verletzungen und Bewusstlosigkeit sind angemessen auszuspielen. Schwere Verletzungen dürfen nicht einfach ignoriert werden.</p>
+                  <p><strong>5.3 Charaktertod</strong><br>Ein endgültiger Charaktertod bzw. besonderes Lore-RP kann nur nach vorheriger Absprache mit der Serverleitung durchgeführt werden.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par6" data-rule>
+                <summary><span class="rule-number">§ 06</span><span class="rule-title">Kriminalität &amp; Konflikte</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>6.1 Allgemein</strong><br>Kriminelles RP ist erlaubt, sofern es einen nachvollziehbaren RP-Hintergrund besitzt und anderen Spielern ausreichend Möglichkeiten zur Interaktion bietet.</p>
+                  <p><strong>6.2 Überfälle &amp; Entführungen</strong><br>Überfälle und Entführungen dürfen nicht ausschließlich zum Abgreifen von Geld oder Gegenständen durchgeführt werden. Das Opfer muss grundsätzlich die Möglichkeit erhalten, RP zu betreiben. Unnötig lange Geiselnahmen, sinnlose Gewalt und reines „Loot-RP“ sind verboten.</p>
+                  <p><strong>6.3 Großkriminalität</strong><br>Für Banken, Juweliere, Staatsgebäude und vergleichbare Großaktionen können zusätzliche Regeln gelten. Diese sind vor Beginn der Aktion zu beachten.</p>
+                  <p><strong>6.4 Dienstkleidung</strong><br>Dienstuniformen von Polizei, Rettungsdienst, Fire Department und anderen staatlichen Einrichtungen dürfen nicht gestohlen oder getragen werden, sofern dies nicht ausdrücklich durch eine entsprechende RP-Regelung erlaubt ist.</p>
+                  <p><strong>6.5 Unzulässige Inhalte</strong><br>Folter, sexualisierte Gewalt, extrem brutale Darstellungen und vergleichbare Inhalte sind verboten.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par7" data-rule>
+                <summary><span class="rule-number">§ 07</span><span class="rule-title">Staatsfraktionen &amp; Organisationen</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>7.1 Allgemein</strong><br>Polizei, Rettungsdienst, Fire Department und andere staatliche Organisationen haben ihre Aufgaben glaubwürdig und verhältnismäßig auszuspielen.</p>
+                  <p><strong>7.2 Polizei</strong><br>Polizeiliche Maßnahmen müssen einen nachvollziehbaren RP-Grund besitzen. Unverhältnismäßige Gewalt, grundlose Durchsuchungen oder das absichtliche Ausnutzen der Behördenrolle sind verboten.</p>
+                  <p><strong>7.3 Rettungsdienst &amp; Fire Department</strong><br>Rettungsdienst und Fire Department sind grundsätzlich neutrale Fraktionen. Ihre Mitglieder dürfen nicht ohne entsprechenden RP-Grund in kriminelle Konflikte hineingezogen werden. Rein wirtschaftlich motivierte Überfälle auf medizinisches oder Feuerwehrpersonal sind verboten.</p>
+                  <p><strong>7.4 Interne Fraktionsregeln</strong><br>Zusätzliche Fraktionsregeln können durch die jeweilige Fraktionsleitung festgelegt werden. Diese dürfen dem allgemeinen Serverregelwerk nicht widersprechen.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par8" data-rule>
+                <summary><span class="rule-number">§ 08</span><span class="rule-title">Fahrzeuge &amp; Verkehr</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>8.1 Fahrverhalten</strong><br>Fahrzeuge sind realistisch und der Situation entsprechend zu benutzen. Verboten sind insbesondere:</p>
+                  <ul><li>sinnloses Rammen</li><li>absichtliches Überfahren</li><li>unrealistisches Offroad-Fahren</li><li>dauerhaftes Rasen ohne RP-Grund</li><li>absichtliches Zerstören fremder Fahrzeuge</li></ul>
+                  <p><strong>8.2 Verkehrsregeln</strong><br>Grundsätzlich ist sich realistisch am Straßenverkehr zu orientieren. Verkehrsverstöße können IC ausgespielt werden und müssen entsprechende RP-Folgen haben.</p>
+                  <p><strong>8.3 Fahrzeug als Waffe</strong><br>Das Fahrzeug darf nicht grundlos als Waffe eingesetzt werden.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par9" data-rule>
+                <summary><span class="rule-number">§ 09</span><span class="rule-title">Technik, Bugs &amp; unerlaubte Vorteile</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>9.1 Cheats &amp; unerlaubte Software</strong><br>Verboten sind sämtliche Programme oder Hilfsmittel, die einen unfairen Vorteil verschaffen. Dazu gehören insbesondere:</p>
+                  <ul><li>Cheats</li><li>Aimbots</li><li>ESP</li><li>Triggerbots</li><li>unerlaubte Makros</li><li>Exploits</li><li>sonstige Manipulationen</li></ul>
+                  <p><strong>9.2 Mods</strong><br>Grafik- und Soundmods sind grundsätzlich erlaubt, sofern sie keinen unfairen Vorteil verschaffen oder das Spielerlebnis anderer beeinträchtigen. Die Serverleitung kann bestimmte Mods jederzeit untersagen.</p>
+                  <p><strong>9.3 Bugs &amp; Exploits</strong><br>Bugs und Exploits dürfen nicht ausgenutzt werden. Gefundene Fehler sind dem Team zu melden. Durch Bugs oder Exploits erlangte Gegenstände, Geld oder andere Vorteile können vom Team entfernt bzw. zurückgesetzt werden.</p>
+                  <p><strong>9.4 Duping</strong><br>Das Vervielfältigen von Gegenständen, Geld oder anderen Ressourcen durch Fehler oder technische Manipulation ist strengstens verboten.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par10" data-rule>
+                <summary><span class="rule-number">§ 10</span><span class="rule-title">Kommunikation, Discord &amp; Streaming</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>10.1 Voice-RP</strong><br>Ein funktionierendes Mikrofon ist Voraussetzung für die Teilnahme am RP. OOC-Gespräche innerhalb von RP-Situationen sind grundsätzlich zu vermeiden.</p>
+                  <p><strong>10.2 Externe Kommunikation</strong><br>Discord, private Nachrichten oder andere externe Kommunikationsmittel dürfen nicht verwendet werden, um IC-Mechaniken oder RP-Einschränkungen zu umgehen.</p>
+                  <p><strong>10.3 Streaming &amp; Aufnahmen</strong><br>Das öffentliche Streamen und Veröffentlichen von Aufnahmen des LSCRP-Servers ist grundsätzlich erlaubt, sofern folgende Voraussetzungen erfüllt werden:</p>
+                  <ol><li>Der Servername „Los Santos City Roleplay“ muss im Titel erkennbar sein.</li><li>Der offizielle Discord muss verlinkt werden.</li><li>Schwerwiegende Supportfälle, Bugs und Exploits dürfen nicht öffentlich aufgenommen, gestreamt oder veröffentlicht werden.</li><li>Private Daten anderer Personen dürfen nicht veröffentlicht werden.</li><li>Die Regeln der jeweiligen Plattform müssen eingehalten werden.</li></ol>
+                  <p>Private oder lokale Aufnahmen zur Dokumentation von Regelverstößen oder Bugs dürfen für den Support angefertigt werden, sofern sie nicht öffentlich verbreitet werden. Die Serverleitung kann Streaming- und Aufnahmebestimmungen jederzeit anpassen.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par11" data-rule>
+                <summary><span class="rule-number">§ 11</span><span class="rule-title">Charaktere &amp; Accounts</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>11.1 Charaktere</strong><br>Charaktere müssen realistisch und für das Serious-RP geeignet sein. Unrealistische Charakterkonzepte oder Charaktere, die ausschließlich zur Provokation erstellt wurden, können abgelehnt werden.</p>
+                  <p><strong>11.2 Namen</strong><br>Charakternamen müssen aus einem glaubwürdigen Vor- und Nachnamen bestehen. Namen realer prominenter Personen oder offensichtlich beleidigende Namen sind nicht erlaubt.</p>
+                  <p><strong>11.3 Multi-Accounting</strong><br>Das Umgehen von Sanktionen oder anderen Einschränkungen durch zusätzliche Accounts ist verboten.</p>
+                  <p><strong>11.4 Account-Sharing</strong><br>Accounts dürfen nicht an andere Personen weitergegeben werden. Der Besitzer ist für seinen Account verantwortlich.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="par12" data-rule>
+                <summary><span class="rule-number">§ 12</span><span class="rule-title">Support, Beweise &amp; Sanktionen</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p><strong>12.1 Support</strong><br>Probleme, Regelverstöße und Beschwerden sind über die vorgesehenen Supportwege zu melden. Meldungen sollten möglichst sachlich und nachvollziehbar erfolgen.</p>
+                  <p><strong>12.2 Beweise</strong><br>Bei Regelverstößen können unter anderem folgende Beweise hilfreich sein:</p>
+                  <ul><li>Videoaufnahmen</li><li>Screenshots</li><li>Chatverläufe</li><li>relevante Informationen zum Zeitpunkt und Ort des Vorfalls</li></ul>
+                  <p>Manipulierte oder bewusst aus dem Zusammenhang gerissene Beweise können selbst sanktioniert werden.</p>
+                  <p><strong>12.3 Sanktionen</strong><br>Je nach Schwere und Häufigkeit eines Verstoßes können unter anderem folgende Maßnahmen erfolgen:</p>
+                  <ul><li>Verwarnung</li><li>Verwarnungspunkte</li><li>Kick</li><li>temporärer Ausschluss</li><li>Fraktionsmaßnahmen</li><li>permanenter Ausschluss (CMA)</li></ul>
+                  <p>Die Serverleitung kann bei schweren Verstößen auch ohne vorherige Verwarnung Maßnahmen ergreifen.</p>
+                  <p><strong>12.4 Umgehung von Sanktionen</strong><br>Das Umgehen einer Sperre oder Sanktion über einen anderen Account ist verboten und kann zu einer Verschärfung der Maßnahme führen.</p>
+                </div>
+              </details>
+              <details class="rule-article" id="schluss" data-rule>
+                <summary><span class="rule-number">ENDE</span><span class="rule-title">Schlussbestimmungen</span><span class="rule-chevron" aria-hidden="true">+</span></summary>
+                <div class="rule-content">
+                  <p>Dieses Regelwerk stellt die grundlegenden Regeln von Los Santos City Roleplay dar. Für bestimmte Bereiche, Fraktionen oder Events können zusätzliche Sonderregeln gelten. Diese sind ebenfalls zu beachten.</p>
+                  <p>Die Serverleitung behält sich vor, Situationen zu beurteilen, die nicht ausdrücklich in diesem Regelwerk aufgeführt sind, sofern dies zur Aufrechterhaltung eines fairen und funktionierenden Serverbetriebs erforderlich ist.</p>
+                  <p>Mit der Nutzung von Los Santos City Roleplay erklärst du dich mit diesem Regelwerk einverstanden.</p>
+                  <p><strong>Los Santos City Roleplay — Respekt. Fairness. Serious Roleplay.</strong></p>
+                </div>
+              </details>
+              <div class="empty-state" id="emptyState">Keine passenden Abschnitte gefunden. Prüfe deine Suchanfrage.</div>
             </div>
-    </div>
-  </div>
-</section>
+          </div>
+        </div>
+      </div>
+    </section>
 
-    <!-- =========================================================
-         FRAKTIONEN
-         ========================================================= -->
     <section class="section" id="fraktionen">
-      <div class="container">
-        <div class="section-header reveal">
-          <div>
-            <div class="section-kicker">Fraktionen</div>
-            <h2 class="section-title">Wähle eine <span>Fraktion</span>.</h2>
-          </div>
-          <p class="section-subtitle">
-            Ob Staatsdienst, Untergrund oder ziviles Leben – jede Fraktion erfüllt
-            einen klaren Zweck in der Welt von Neonhafen.
-          </p>
+      <div class="wrap">
+        <div class="section-heading">
+          <div><div class="section-kicker">Organisationen</div><h2>Viele Rollen. Eine Stadt.</h2></div>
+          <p class="section-intro">Staatliche Organisationen tragen Verantwortung für Sicherheit, Versorgung und glaubwürdige Geschichten in Los Santos. Für alle gelten die Grundsätze des Regelwerks.</p>
         </div>
-
-        <div class="grid-3">
-          <article class="card faction-card reveal">
-            <div class="faction-img" aria-hidden="true">
-              <div class="faction-img-inner">
-                Platzhalterbild: Los Santos Police Department – Fahrzeugflotte vor dem HQ.
-              </div>
-            </div>
-            <div class="faction-body">
-              <h3 class="card-title">Los Santos Police Department</h3>
-              <p>
-                Hüter von Recht und Ordnung in LA. Vom Streifendienst bis zur
-                Spezialeinheit – hier bestimmst du mit, wie sicher die Stadt ist.
-              </p>
-              <ul class="faction-meta-list">
-                <li><strong>Aufgaben:</strong> Streifen, Einsätze, Verkehr, Großlagen.</li>
-                <li><strong>IC Voraussetzungen:</strong> Mindestalter 20, Legal Eingewandert, Keine Vorstrafen.</li>
-                <li><strong>Bewerbung:</strong> Über E-Mail Verteiler.</li>
-              </ul>
-            </div>
-          </article>
-
-          <article class="card faction-card reveal">
-            <div class="faction-img" aria-hidden="true">
-              <div class="faction-img-inner">
-                Platzhalterbild: Medizinisches Personal im Krankenhaus von LA.
-              </div>
-            </div>
-            <div class="faction-body">
-              <h3 class="card-title">American Medical Rescue</h3>
-              <p>
-                Ohne medizinische Versorgung läuft nichts. Von Rettungsdienst bis
-                Chirurgie – du entscheidest über Leben, Tod und spannende Notfälle.
-              </p>
-              <ul class="faction-meta-list">
-                <li><strong>Aufgaben:</strong> Notfälle, Reanimation, Klinikalltag.</li>
-                <li><strong>IC Voraussetzungen:</strong> Mindestalter 18, Legal Eingewandert.</li>
-                <li><strong>Bewerbung:</strong> Über Email Verteiler.</li>
-              </ul>
-            </div>
-          </article>
-
-          <article class="card faction-card reveal">
-            <div class="faction-img" aria-hidden="true">
-              <div class="faction-img-inner">
-                Platzhalterbild: Los Santos Fire Department.
-              </div>
-            </div>
-            <div class="faction-body">
-              <h3 class="card-title">Los Santos Fire Department</h3>
-              <p>
-              Dienen mit Mut, Integrität und Stolz. Komm zum LAFD und Lösche die Stadt!
-              </p>
-              <ul class="faction-meta-list">
-                <li><strong>Aufgaben:</strong> Brandbekämpfungen, Technische Hilfe, First Responder, Menschenretten.</li>
-                <li><strong>Voraussetzungen:</strong> Mindestalter 18, Legake Einwanderung.</li>
-                <li><strong>Bewerbung:</strong> Über Email Verteiler.</li>
-              </ul>
-            </div>
-          </article>
+        <div class="faction-grid">
+          <article class="faction" data-mark="PD"><span class="faction-tag">Staatsfraktion</span><h3>Polizei</h3><p>Polizeiliche Maßnahmen brauchen einen nachvollziehbaren RP-Grund und müssen verhältnismäßig bleiben.</p></article>
+          <article class="faction" data-mark="EMS"><span class="faction-tag">Staatsfraktion</span><h3>Rettungsdienst</h3><p>Medizinische Versorgung als grundsätzlich neutrale Rolle – mit Raum für glaubwürdiges RP.</p></article>
+          <article class="faction" data-mark="FD"><span class="faction-tag">Staatsfraktion</span><h3>Fire Department</h3><p>Brandbekämpfung und Hilfeleistung im Rahmen der Aufgaben und Regeln der Community.</p></article>
         </div>
       </div>
     </section>
 
-    <!-- =========================================================
-         SERVER-TEAM
-         ========================================================= -->
-    <section class="section" id="team">
-      <div class="container">
-        <div class="section-header reveal">
-          <div>
-            <div class="section-kicker">Team</div>
-            <h2 class="section-title">Menschen hinter dem <span>Server</span>.</h2>
-          </div>
-          <p class="section-subtitle">
-            Kurze Wege, klare Zuständigkeiten. Hier findest du die wichtigsten
-            Ansprechpartner:innen für dein Anliegen.
-          </p>
-        </div>
-
-        <div class="team-filters reveal" aria-label="Team nach Rolle filtern">
-          <button class="filter-pill filter-pill--active" type="button" data-role-filter="alle">Alle Rollen</button>
-          <button class="filter-pill" type="button" data-role-filter="projektleitung">Projektleitung</button>
-          <button class="filter-pill" type="button" data-role-filter="management">Management</button>
-          <button class="filter-pill" type="button" data-role-filter="admin">Administratoren</button>
-          <button class="filter-pill" type="button" data-role-filter="moderator">Moderatoren</button>
-          <button class="filter-pill" type="button" data-role-filter="support">Supporter</button>
-          <button class="filter-pill" type="button" data-role-filter="dev">Entwickler</button>
-        </div>
-
-        <div class="grid-3" id="teamGrid">
-          <!-- Beispiel-Teammitglieder; später einfach erweiterbar -->
-          <article class="card team-card reveal" data-role="projektleitung">
-            <div class="team-avatar" aria-hidden="true">AL</div>
-            <div>
-              <div class="team-role">Projektleitung</div>
-              <div class="team-name">Alex</div>
-              <div class="team-meta">Discord: Blitzal3x · Fokus: Vision &amp; Community</div>
-              <p class="team-desc">
-                Leitet die Gesamtentwicklung, kümmert sich um Lore, große Events und
-                hält den Überblick über alle Teams.
-              </p>
-            </div>
-          </article>
-
-          <article class="card team-card reveal" data-role="management">
-            <div class="team-avatar" aria-hidden="true">ME</div>
-            <div>
-              <div class="team-role">Server-Management</div>
-              <div class="team-name">Vakant</div>
-              <div class="team-meta">Discord: Vakant · Fokus: Bewerbungen &amp; Struktur</div>
-              <p class="team-desc">
-                Koordiniert Fraktionen, Bewerbungsphasen und sorgt dafür, dass interne
-                Abläufe rund laufen.
-              </p>
-            </div>
-          </article>
-
-          <article class="card team-card reveal" data-role="admin">
-            <div class="team-avatar" aria-hidden="true">RA</div>
-            <div>
-              <div class="team-role">Head Administrator</div>
-              <div class="team-name">Jannick</div>
-              <div class="team-meta">Discord: XY11 · Fokus: Supportfälle &amp; Technik</div>
-              <p class="team-desc">
-                Zuständig für schwere Regelverstöße, technische Eskalationen und
-                serverweite Ankündigungen.
-              </p>
-            </div>
-          </article>
-
-          <article class="card team-card reveal" data-role="moderator">
-            <div class="team-avatar" aria-hidden="true">LE</div>
-            <div>
-              <div class="team-role">Moderator</div>
-              <div class="team-name">Thomas</div>
-              <div class="team-meta">Discord: bottlay · Fokus: In‑Game Mediation</div>
-              <p class="team-desc">
-                Moderiert Konflikte, begleitet Reports und hilft dabei, Lösungen im RP
-                zu finden, bevor es Strafen braucht.
-              </p>
-            </div>
-          </article>
-
-          <article class="card team-card reveal" data-role="support">
-            <div class="team-avatar" aria-hidden="true">JA</div>
-            <div>
-              <div class="team-role">Supporter</div>
-              <div class="team-name">Vakant</div>
-              <div class="team-meta">Discord: Vakant · Fokus: Newcomer &amp; Technikfragen</div>
-              <p class="team-desc">
-                Unterstützt neue Spieler:innen beim Einstieg, erklärt das Server‑Setup
-                und hilft bei kleineren technischen Problemen.
-              </p>
-            </div>
-          </article>
-
-          <article class="card team-card reveal" data-role="dev">
-            <div class="team-avatar" aria-hidden="true">DE</div>
-            <div>
-              <div class="team-role">Entwickler</div>
-              <div class="team-name">Mark</div>
-              <div class="team-meta">Discord: Chelllo · Fokus: Scripts &amp; Performance</div>
-              <p class="team-desc">
-                Arbeitet an neuen Features, Performanceoptimierungen und sorgt dafür,
-                dass Bugs schnell gefixt werden.
-              </p>
-            </div>
-          </article>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================
-         FAQ
-         ========================================================= -->
-    <section class="section" id="faq">
-      <div class="container">
-        <div class="section-header reveal">
-          <div>
-            <div class="section-kicker">FAQ</div>
-            <h2 class="section-title">Häufige Fragen zum <span>Server</span>.</h2>
-          </div>
-          <p class="section-subtitle">
-            Von der Bewerbung bis zum Support – hier findest du schnelle Antworten.
-          </p>
-        </div>
-
-        <div class="faq-grid">
-          <div class="faq-list" aria-label="Häufige Fragen">
-            <button class="faq-item reveal" type="button">
-              <div class="faq-question-row">
-                <div class="faq-question">Wie kann ich mich verifizieren?</div>
-                <div class="faq-toggle" aria-hidden="true">+</div>
-              </div>
-              <div class="faq-answer">
-                Die Verifizierung läuft über unseren Discord. Dort findest du im Kanal
-                <strong>#𝚅erifizierung</strong> ein Button. Nachdem du es abgeschickt
-                hast, erhälst du innerhalb 30 Minuten eine Rolle.
-              </div>
-            </button>
-
-            <button class="faq-item reveal" type="button">
-              <div class="faq-question-row">
-                <div class="faq-question">Brauche ich RP‑Erfahrung, um mitzuspielen?</div>
-                <div class="faq-toggle" aria-hidden="true">+</div>
-              </div>
-              <div class="faq-answer">
-                Nein, aber du solltest bereit sein zu lernen. Im Idealfall hast du schon
-                Streams geschaut oder warst auf anderen RP‑Servern. Im Onboarding helfen
-                wir dir beim Einstieg.
-              </div>
-            </button>
-
-            <button class="faq-item reveal" type="button">
-              <div class="faq-question-row">
-                <div class="faq-question">Was passiert bei Regelverstößen?</div>
-                <div class="faq-toggle" aria-hidden="true">+</div>
-              </div>
-              <div class="faq-answer">
-                Kleinere Verstöße werden zunächst im Gespräch geklärt. Wiederholte oder
-                schwere Verstöße führen zu dokumentierten Strafen bis hin zum Bann.
-                Jedoch kann Kleinere Verstöße auch Bans führen, je nach Schwere
-              </div>
-            </button>
-
-            <button class="faq-item reveal" type="button">
-              <div class="faq-question-row">
-                <div class="faq-question">Wie erreiche ich das Team am schnellsten?</div>
-                <div class="faq-toggle" aria-hidden="true">+</div>
-              </div>
-              <div class="faq-answer">
-                Ingame kannst du mit /report das Team errreichen.
-                Alternativ nutzt du auf Discord das Ticket‑System in
-                <strong>#Tickets</strong> aber du kannst auch in den Voice Support in <strong>Support Warteraum</strong> gehen und warten.
-              </div>
-            </button>
-          </div>
-
-          <aside class="reveal">
-            <p class="faq-note">
-              Deine Frage wurde hier nicht beantwortet? Dann melde dich gerne direkt
-              im Support auf Discord. Wir erweitern
-              die FAQ regelmäßig um häufige Themen.
-            </p>
-          </aside>
-        </div>
-      </div>
-    </section>
-
-    <!-- =========================================================
-         KONTAKT & IMPRESSUM / DATENSCHUTZ-HINWEISE
-         ========================================================= -->
-    <section class="section" id="kontakt">
-      <div class="container">
-        <div class="section-header reveal">
-          <div>
-            <div class="section-kicker">Discord</div>
-            <h2 class="section-title">Join unser Discord und hab <span>Spaß!</span>.</h2>
-          </div>
-        </div>
-
-        <div class="contact-grid">
-
-          <!-- Discord & rechtliches -->
-          <aside class="contact-aside reveal">
-            <p>
-              Am schnellsten erreichst du uns über Discord. Dort findest du auch
-              alle aktuellen Infos, Changelogs und Event‑Ankündigungen.
-            </p>
-
-            <div class="discord-card">
-              <div>
-                <strong>Discord‑Server:</strong><br />
-                <span class="discord-tagline">LSCRP · Community &amp; Support</span>
-              </div>
-              <button class="btn btn--primary" type="button" onclick="window.open('https://discord.gg/2ffMuAfWZ6', '_blank')">
-                <span class="btn__dot" aria-hidden="true"></span>
-                Discord öffnen
-              </button>
-              <p style="font-size:0.8rem; color:#c7d2fe; margin:0;">
-                Nach dem Joinen findest du alle wichtigen Kanäle übersichtlich im Bereich
-                <strong>#start-here</strong>.
-              </p>
-            </div>
-          </aside>
+    <section class="section" id="support">
+      <div class="wrap">
+        <div class="support-box">
+          <div><div class="section-kicker">Fragen oder Anliegen?</div><h3>Klär es über den offiziellen Support.</h3><p>Probleme, Beschwerden und Regelverstöße bitte sachlich über die vorgesehenen Supportwege melden. Der offizielle Discord ist der Einstieg in die Community.</p></div>
+          <a class="button" href="https://discord.gg/2ffMuAfWZ6" target="_blank" rel="noopener noreferrer">Discord öffnen <span aria-hidden="true">↗</span></a>
         </div>
       </div>
     </section>
   </main>
 
-  <!-- ===========================================================
-       FOOTER
-       =========================================================== -->
-  <footer class="site-footer">
-    <div class="container">
-      <div class="footer-grid">
-        <div>
-          <div class="navbar__brand" style="margin-bottom:0.7rem;">
-            <div class="brand-logo" aria-hidden="true"></div>
-            <div>
-              <div class="brand-title">Los Santos City Roleplay</div>
-              <div class="brand-subtitle">Roleplay Community</div>
-            </div>
-          </div>
-          <p style="max-width:19rem;">
-            LSCRP ist ein Beispiel für einen modernen, realen, community‑getriebenen RP‑Server
-            mit Fokus auf Storytelling, Stabilität und Fairness.
-          </p>
-        </div>
-
-        <div>
-          <div class="footer-heading">Navigation</div>
-          <ul class="footer-links">
-            <li><button type="button" data-scroll-target="#start">Startseite</button></li>
-            <li><button type="button" data-scroll-target="#ueber">Über den Server</button></li>
-            <li><button type="button" data-scroll-target="#regelwerk">Regelwerk</button></li>
-            <li><button type="button" data-scroll-target="#fraktionen">Fraktionen</button></li>
-            <li><button type="button" data-scroll-target="#team">Server-Team</button></li>
-            <li><button type="button" data-scroll-target="#faq">FAQ</button></li>
-            <li><button type="button" data-scroll-target="#kontakt">Kontakt</button></li>
-          </ul>
-        </div>
-
-      <div class="footer-bottom">
-        <span>© <span id="year"></span> LSCRP. Alle Rechte vorbehalten.</span>
-        <div class="footer-bottom-links">
-          <span>Design &amp; Code: Beispiel‑Frontend</span>
-          <span>Optimiert für Dark Mode</span>
-        </div>
-      </div>
-    </div>
+  <footer>
+    <div class="wrap footer-row"><a class="brand" href="#start"><span class="brand-mark" aria-hidden="true">LS</span><span><span class="brand-title">Los Santos City Roleplay</span><br><span class="brand-sub">Respekt. Fairness. Serious Roleplay.</span></span></a><span>© <span id="year"></span> LSCRP · Regelwerk-Stand 28.09.2026</span></div>
   </footer>
 
-  <!-- Scroll-to-Top Button -->
-  <button class="scroll-top-btn" id="scrollTopBtn" type="button" aria-label="Nach oben scrollen">
-    ↑
-  </button>
-
-  <!-- ===========================================================
-       JAVASCRIPT – NAVIGATION, DROPDOWNS, SUCHE, FORMULAR
-       =========================================================== -->
   <script>
-    (function () {
-      "use strict";
+    (() => {
+      const articles = [...document.querySelectorAll('[data-rule]')];
+      const search = document.getElementById('ruleSearch');
+      const count = document.getElementById('resultCount');
+      const empty = document.getElementById('emptyState');
+      const normalize = value => value.toLocaleLowerCase('de').normalize('NFD').replace(/[\u0300-\u036f]/g, '');
 
-      const prefersReducedMotion = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+      function filterRules() {
+        const query = normalize(search.value.trim());
+        let shown = 0;
+        articles.forEach(article => {
+          const match = !query || normalize(article.innerText).includes(query);
+          article.hidden = !match;
+          if (match) {
+            shown++;
+            if (query) article.open = true;
+          }
+        });
+        count.textContent = `${shown} von ${articles.length} Abschnitten${query ? ' gefunden' : ''}`;
+        empty.classList.toggle('is-visible', shown === 0);
+      }
+      search.addEventListener('input', filterRules);
+      document.getElementById('expandAll').addEventListener('click', () => articles.forEach(item => { if (!item.hidden) item.open = true; }));
+      document.getElementById('collapseAll').addEventListener('click', () => articles.forEach(item => item.open = false));
+      document.querySelectorAll('.toc a').forEach(link => link.addEventListener('click', () => {
+        const target = document.querySelector(link.getAttribute('href'));
+        if (target) target.open = true;
+      }));
 
-      // ---------------------------------------------------------
-      // PRELOADER
-      // ---------------------------------------------------------
-      window.addEventListener("load", function () {
-        const preloader = document.getElementById("preloader");
-        if (!preloader) return;
-        const hide = function () {
-          preloader.classList.add("preloader--hidden");
-        };
-        if (prefersReducedMotion) {
-          hide();
-        } else {
-          setTimeout(hide, 500);
+      const toggle = document.getElementById('menuToggle');
+      const mobileLinks = document.getElementById('mobileLinks');
+      toggle.addEventListener('click', () => {
+        const open = toggle.getAttribute('aria-expanded') !== 'true';
+        toggle.setAttribute('aria-expanded', String(open));
+        toggle.setAttribute('aria-label', open ? 'Menü schließen' : 'Menü öffnen');
+        toggle.textContent = open ? '×' : '☰';
+        mobileLinks.classList.toggle('is-open', open);
+      });
+      mobileLinks.addEventListener('click', event => {
+        if (event.target.closest('a')) {
+          mobileLinks.classList.remove('is-open');
+          toggle.setAttribute('aria-expanded', 'false');
+          toggle.setAttribute('aria-label', 'Menü öffnen');
+          toggle.textContent = '☰';
         }
       });
-
-      // ---------------------------------------------------------
-      // STICKY NAVBAR SCROLL-STATE
-      // ---------------------------------------------------------
-      const header = document.getElementById("site-header");
-      const handleScrollHeader = function () {
-        if (!header) return;
-        if (window.scrollY > 10) {
-          header.classList.add("site-header--scrolled");
-        } else {
-          header.classList.remove("site-header--scrolled");
-        }
-      };
-      window.addEventListener("scroll", handleScrollHeader);
-      handleScrollHeader();
-
-      // ---------------------------------------------------------
-      // MOBILES MENÜ
-      // ---------------------------------------------------------
-      const navbarToggle = document.getElementById("navbarToggle");
-      const mobileMenu = document.getElementById("mobileMenu");
-
-      if (navbarToggle && mobileMenu) {
-        navbarToggle.addEventListener("click", function () {
-          const isOpen = navbarToggle.classList.toggle("navbar__toggle--open");
-          navbarToggle.setAttribute("aria-expanded", String(isOpen));
-          mobileMenu.style.maxHeight = isOpen ? mobileMenu.scrollHeight + "px" : "0";
-        });
-
-        mobileMenu.addEventListener("click", function (event) {
-          const target = event.target;
-          if (target.matches("[data-scroll-target]")) {
-            navbarToggle.classList.remove("navbar__toggle--open");
-            navbarToggle.setAttribute("aria-expanded", "false");
-            mobileMenu.style.maxHeight = "0";
-          }
-        });
-      }
-
-      // ---------------------------------------------------------
-      // DROPDOWN-MENÜS DESKTOP
-      // ---------------------------------------------------------
-      const dropdownToggles = document.querySelectorAll("[data-dropdown-toggle]");
-      dropdownToggles.forEach(function (toggle) {
-        const id = toggle.getAttribute("data-dropdown-toggle");
-        const menu = id && document.getElementById(id);
-        const navItem = toggle.closest(".nav-item");
-        if (!menu || !navItem) return;
-
-        function closeOthers() {
-          document.querySelectorAll(".nav-item--open").forEach(function (openItem) {
-            if (openItem !== navItem) openItem.classList.remove("nav-item--open");
-          });
-        }
-
-        toggle.addEventListener("click", function () {
-          const isOpen = navItem.classList.toggle("nav-item--open");
-          if (isOpen) {
-            closeOthers();
-          }
-        });
-
-        menu.addEventListener("click", function (event) {
-          if (event.target.matches("[data-scroll-target]")) {
-            navItem.classList.remove("nav-item--open");
-          }
-        });
-      });
-
-      document.addEventListener("click", function (event) {
-        if (!event.target.closest(".nav-item")) {
-          document.querySelectorAll(".nav-item--open").forEach(function (item) {
-            item.classList.remove("nav-item--open");
-          });
-        }
-      });
-
-      // ---------------------------------------------------------
-      // SMOOTH SCROLL FÜR BUTTONS & LINKS MIT data-scroll-target
-      // ---------------------------------------------------------
-      function scrollToTarget(selector) {
-        const target = document.querySelector(selector);
-        if (!target) return;
-        target.scrollIntoView({ behavior: prefersReducedMotion ? "auto" : "smooth" });
-      }
-
-      document.addEventListener("click", function (event) {
-        const trigger = event.target.closest("[data-scroll-target]");
-        if (!trigger) return;
-        const selector = trigger.getAttribute("data-scroll-target");
-        if (!selector) return;
-        event.preventDefault();
-        scrollToTarget(selector);
-
-        // Optional: wenn aus Dropdown heraus eine Kategorie gewählt wurde
-        const cat = trigger.getAttribute("data-rules-category");
-        if (cat) {
-          const select = document.getElementById("rulesCategory");
-          if (select) {
-            select.value = cat;
-            applyRulesFilter();
-          }
-        }
-      });
-
-      // ---------------------------------------------------------
-      // SCROLL-REVEAL
-      // ---------------------------------------------------------
-      const revealItems = document.querySelectorAll(".reveal");
-      if ("IntersectionObserver" in window && revealItems.length) {
-        const observer = new IntersectionObserver(
-          function (entries, obs) {
-            entries.forEach(function (entry) {
-              if (entry.isIntersecting) {
-                entry.target.classList.add("reveal--visible");
-                obs.unobserve(entry.target);
-              }
-            });
-          },
-          { threshold: 0.18 }
-        );
-        revealItems.forEach(function (item) { observer.observe(item); });
-      } else {
-        revealItems.forEach(function (item) { item.classList.add("reveal--visible"); });
-      }
-
-      // ---------------------------------------------------------
-      // REGELWERK – ACCORDIONS, SUCHE & FILTER
-      // ---------------------------------------------------------
-      const ruleItems = document.querySelectorAll(".rule-item");
-      ruleItems.forEach(function (item) {
-        const toggle = item.querySelector(".rule-toggle");
-        if (!toggle) return;
-        toggle.addEventListener("click", function () {
-          item.classList.toggle("rule-item--open");
-        });
-      });
-
-      const rulesSearchInput = document.getElementById("rulesSearch");
-      const rulesCategorySelect = document.getElementById("rulesCategory");
-      const rulesResultLabel = document.getElementById("rulesResultLabel");
-
-      function applyRulesFilter() {
-        const query = (rulesSearchInput && rulesSearchInput.value || "").trim().toLowerCase();
-        const category = rulesCategorySelect ? rulesCategorySelect.value : "alle";
-        let visibleCount = 0;
-
-        ruleItems.forEach(function (item) {
-          const parentSection = item.closest("[data-rule-category]");
-          const itemCat = parentSection ? parentSection.getAttribute("data-rule-category") : "";
-          const text = (item.getAttribute("data-search-text") || "").toLowerCase();
-          const byCategory = category === "alle" || itemCat === category;
-          const bySearch = !query || text.includes(query);
-          const visible = byCategory && bySearch;
-          item.style.display = visible ? "" : "none";
-          if (visible) visibleCount++;
-        });
-
-        if (!rulesResultLabel) return;
-        if (!query && (category === "alle")) {
-          rulesResultLabel.textContent = "Alle Regeln sichtbar";
-        } else {
-          const parts = [];
-          if (query) parts.push("Suche: '" + (rulesSearchInput.value || "") + "'");
-          if (category !== "alle") parts.push("Kategorie: " + category);
-          const context = parts.join(" · ");
-          if (visibleCount === 0) {
-            rulesResultLabel.textContent = "Keine Treffer – " + context;
-          } else if (visibleCount === 1) {
-            rulesResultLabel.textContent = "1 passende Regel – " + context;
-          } else {
-            rulesResultLabel.textContent = visibleCount + " passende Regeln – " + context;
-          }
-        }
-      }
-
-      if (rulesSearchInput) {
-        rulesSearchInput.addEventListener("input", applyRulesFilter);
-      }
-      if (rulesCategorySelect) {
-        rulesCategorySelect.addEventListener("change", applyRulesFilter);
-      }
-
-      // ---------------------------------------------------------
-      // TEAM – FILTER NACH ROLLE
-      // ---------------------------------------------------------
-      const filterPills = document.querySelectorAll(".filter-pill");
-      const teamCards = document.querySelectorAll("#teamGrid [data-role]");
-
-      filterPills.forEach(function (pill) {
-        pill.addEventListener("click", function () {
-          const role = pill.getAttribute("data-role-filter");
-          filterPills.forEach(function (p) { p.classList.remove("filter-pill--active"); });
-          pill.classList.add("filter-pill--active");
-
-          teamCards.forEach(function (card) {
-            const cardRole = card.getAttribute("data-role");
-            const show = role === "alle" || cardRole === role;
-            card.style.display = show ? "grid" : "none";
-          });
-        });
-      });
-
-      // ---------------------------------------------------------
-      // FAQ – ACCORDION
-      // ---------------------------------------------------------
-      const faqItems = document.querySelectorAll(".faq-item");
-      faqItems.forEach(function (item) {
-        item.addEventListener("click", function () {
-          const isOpen = item.classList.toggle("faq-item--open");
-          const toggle = item.querySelector(".faq-toggle");
-          if (toggle) toggle.textContent = isOpen ? "–" : "+";
-        });
-      });
-
-      // ---------------------------------------------------------
-      // KONTAKTFORMULAR – BASISVALIDIERUNG
-      // ---------------------------------------------------------
-      const contactForm = document.getElementById("contactForm");
-      const formStatus = document.getElementById("formStatus");
-
-      function setError(fieldId, message) {
-        const errorEl = document.querySelector('[data-error-for="' + fieldId + '"]');
-        if (errorEl) errorEl.textContent = message || "";
-      }
-
-      function validateEmail(value) {
-        const re = /.+@.+\..+/;
-        return re.test(String(value).toLowerCase());
-      }
-
-      if (contactForm && formStatus) {
-        contactForm.addEventListener("submit", function (event) {
-          event.preventDefault();
-
-          ["name", "email", "topic", "message"].forEach(function (id) { setError(id, ""); });
-          formStatus.textContent = "";
-          formStatus.classList.remove("form-status--success", "form-status--error");
-
-          const name = contactForm.name.value.trim();
-          const email = contactForm.email.value.trim();
-          const topic = contactForm.topic.value;
-          const message = contactForm.message.value.trim();
-
-          let valid = true;
-
-          if (!name) {
-            setError("name", "Bitte gib einen Namen an.");
-            valid = false;
-          }
-
-          if (!email) {
-            setError("email", "Bitte gib eine E-Mail-Adresse an.");
-            valid = false;
-          } else if (!validateEmail(email)) {
-            setError("email", "Diese E-Mail-Adresse wirkt ungültig.");
-            valid = false;
-          }
-
-          if (!topic) {
-            setError("topic", "Bitte wähle ein Thema aus.");
-            valid = false;
-          }
-
-          if (!message || message.length < 16) {
-            setError("message", "Bitte beschreibe dein Anliegen in ein paar Sätzen.");
-            valid = false;
-          }
-
-          if (!valid) {
-            formStatus.textContent = "Bitte prüfe die markierten Felder.";
-            formStatus.classList.add("form-status--error");
-            return;
-          }
-
-          // Hier könnte ein echter Request an Backend / Mail-System erfolgen.
-          formStatus.textContent = "Vielen Dank! Deine Nachricht wurde lokal erfasst. In einem echten Setup würde sie nun an das Team gesendet.";
-          formStatus.classList.add("form-status--success");
-          contactForm.reset();
-        });
-      }
-
-      // ---------------------------------------------------------
-      // SCROLL-TO-TOP BUTTON
-      // ---------------------------------------------------------
-      const scrollTopBtn = document.getElementById("scrollTopBtn");
-      function handleScrollTopBtn() {
-        if (!scrollTopBtn) return;
-        if (window.scrollY > 280) {
-          scrollTopBtn.classList.add("scroll-top-btn--visible");
-        } else {
-          scrollTopBtn.classList.remove("scroll-top-btn--visible");
-        }
-      }
-      window.addEventListener("scroll", handleScrollTopBtn);
-      handleScrollTopBtn();
-
-      if (scrollTopBtn) {
-        scrollTopBtn.addEventListener("click", function () {
-          window.scrollTo({ top: 0, behavior: prefersReducedMotion ? "auto" : "smooth" });
-        });
-      }
-
-      // ---------------------------------------------------------
-      // FOOTER – AKTUELLES JAHR
-      // ---------------------------------------------------------
-      const yearEl = document.getElementById("year");
-      if (yearEl) yearEl.textContent = new Date().getFullYear();
+      document.getElementById('year').textContent = new Date().getFullYear();
     })();
   </script>
 </body>
