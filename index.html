@@ -39,7 +39,8 @@
     .topbar { position: sticky; top: 0; z-index: 50; background: rgb(11 16 24 / 90%); border-bottom: 1px solid rgb(118 200 239 / 13%); backdrop-filter: blur(16px); }
     .nav { min-height: var(--nav-h); display: flex; align-items: center; justify-content: space-between; gap: 24px; }
     .brand { display: inline-flex; align-items: center; gap: 12px; min-width: 0; }
-    .brand-mark { width: 38px; height: 38px; flex: 0 0 38px; display: grid; place-items: center; border: 1px solid var(--blue); color: var(--lime); font-size: 12px; font-weight: 800; letter-spacing: -.07em; transform: rotate(-5deg); background: linear-gradient(145deg, #18384a, #111923 65%); box-shadow: 5px 5px 0 rgb(118 200 239 / 15%); }
+    .brand-mark { width: 38px; height: 38px; flex: 0 0 38px; display: grid; place-items: center; border: 1px solid var(--blue); color: var(--lime); font-size: 12px; font-weight: 800; letter-spacing: -.07em; transform: rotate(-5deg); background: linear-gradient(145deg, #18384a, #111923 65%); box-shadow: 5px 5px 0 rgb(118 200 239 / 15%); overflow: hidden; }
+    .brand-mark img { width: 100%; height: 100%; object-fit: contain; transform: rotate(5deg); }
     .brand-name { font-size: 12px; font-weight: 800; letter-spacing: .12em; line-height: 1.25; text-transform: uppercase; white-space: nowrap; }
     .brand-sub { color: var(--muted); font-size: 11px; letter-spacing: .04em; }
     .nav-links { display: flex; align-items: center; gap: 24px; color: var(--muted); font-size: 13px; }
@@ -67,6 +68,7 @@
     .status { display: inline-flex; align-items: center; gap: 7px; color: var(--lime); letter-spacing: .06em; }
     .status::before { content: ""; width: 7px; height: 7px; border-radius: 50%; background: var(--lime); box-shadow: 0 0 12px rgb(214 243 121 / 65%); }
     .panel-monogram { height: 185px; display: grid; place-items: center; margin: 20px 0 16px; border: 1px solid rgb(118 200 239 / 22%); background: repeating-linear-gradient(135deg, transparent 0 17px, rgb(118 200 239 / 3%) 17px 18px); color: var(--blue); font-weight: 900; letter-spacing: -.12em; font-size: 84px; position: relative; overflow: hidden; }
+    .panel-monogram img { width: min(82%, 300px); height: 86%; object-fit: contain; position: relative; z-index: 1; }
     .panel-monogram::before, .panel-monogram::after { content: ""; position: absolute; width: 82px; height: 1px; background: var(--lime); transform: rotate(-45deg); opacity: .8; }
     .panel-monogram::before { top: 42px; left: 20px; }
     .panel-monogram::after { bottom: 42px; right: 20px; }
@@ -165,7 +167,7 @@
   <header class="topbar">
     <div class="wrap nav">
       <a class="brand" href="#start" aria-label="Los Santos City Roleplay – Startseite">
-        <span class="brand-mark" aria-hidden="true">LS</span>
+        <span class="brand-mark" aria-hidden="true"><img src="lacrp.png" alt=""></span>
         <span><span class="brand-name">Los Santos City Roleplay</span><br><span class="brand-sub">Serious Roleplay · FiveM</span></span>
       </a>
       <nav class="nav-links" aria-label="Hauptnavigation">
@@ -194,7 +196,7 @@
         </div>
         <aside class="hero-panel" aria-label="LSCRP auf einen Blick">
           <div class="panel-top"><span>LSCRP / Los Santos</span><span class="status">Community</span></div>
-          <div class="panel-monogram" aria-hidden="true">LS</div>
+          <div class="panel-monogram"><img src="lacrp.png" alt="Los Santos City Roleplay Logo"></div>
           <div class="panel-foot"><span><strong>FiveM</strong> Roleplay</span><span><strong>DE</strong> Community</span><span><strong>01</strong> gemeinsame Story</span></div>
         </aside>
       </div>
@@ -397,7 +399,7 @@
   </main>
 
   <footer>
-    <div class="wrap footer-row"><a class="brand" href="#start"><span class="brand-mark" aria-hidden="true">LS</span><span><span class="brand-title">Los Santos City Roleplay</span><br><span class="brand-sub">Respekt. Fairness. Serious Roleplay.</span></span></a><span>© <span id="year"></span> LSCRP · Regelwerk-Stand 28.09.2026</span></div>
+    <div class="wrap footer-row"><a class="brand" href="#start"><span class="brand-mark" aria-hidden="true"><img src="lacrp.png" alt=""></span><span><span class="brand-title">Los Santos City Roleplay</span><br><span class="brand-sub">Respekt. Fairness. Serious Roleplay.</span></span></a><span>© <span id="year"></span> LSCRP · Regelwerk-Stand 28.09.2026</span></div>
   </footer>
 
   <script>
